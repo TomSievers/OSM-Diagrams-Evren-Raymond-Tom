@@ -1,0 +1,9 @@
+@startuml
+
+participant PoleSession as pSession
+participant "p:Payment" as p
+
+pSession -> p: sendInvoice(reservation: Reservation): void
+
+
+@enduml

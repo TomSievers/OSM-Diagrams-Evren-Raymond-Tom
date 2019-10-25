@@ -1,0 +1,11 @@
+@startuml
+
+actor Actor as mainActor
+participant System
+
+mainActor -> System: chooseCar(CarDetails)
+System -> mainActor: showReservationPage()
+mainActor -> System: enterReservationDetails(startTime, endTime)
+
+
+@enduml
