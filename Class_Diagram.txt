@@ -1,0 +1,191 @@
+@startuml
+
+Interface IClientDB
+Interface ICheckInDB
+{
+	+hasReservation(poleId: unsigned long long, cardId: unsigned long long): boolean
+	+returnCar(cardId: unsigned long long): boolean
+	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
+}
+Interface ICloseCommunication
+{
+	+readSignature(): string
+	+cardPresent(): boolean
+}
+Interface IPositional
+{
+	+getPosition(): Position
+}
+Class Position <<struct>>
+{
+	+longitude: double
+	+latitude: double
+	+altitude: double
+}
+Interface ICarDB
+{
+	+getReservationForCar(id: unsigned long long): Reservation
+	+updatePosition(currentPosition: Position): void
+	+updateCarStatus(status: CarStatus):void
+	+carBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
+}
+
+enum CarStatus{
+	DOORS_CLOSED_AT_REDCARS
+	DOORS_OPEN_AT_REDCARS
+	PARKED
+	ACTIVE
+	PARKED_AT_REDCARS
+}
+
+Class Reservation<<struct>>
+{
+	+id: unsigned long long
+	+cardId: unsigned long long
+	+startTime: unsigned long long
+	+endTime: unsigned long long
+	+checkedIn: boolean
+	+completed: boolean
+}
+
+Class User<<struct>>
+{
+	+name: string
+	+address: string
+	+reputation: short
+	+accountActive: boolean
+	+id: unsigned long long
+	+cardId: unsigned long long
+	+bankAccountNumber: string
+	+emailaddress: string
+}
+
+Class OpenPayment<<struct>>
+{
+	+id: unsigned long long
+	+amount: float
+}
+
+enum Subscription{
+	BETAALD
+	GRATIS
+}
+
+Class CarDetails<<struct>>
+{
+	+id: unsigned long long
+	+brand: string
+	+licensePlate: string
+	+noDoors: unsigned short
+	+horsePower: unsigned short
+	+cargoSpace: unsigned short
+	+noSeats: unsigned short
+	+mileage: unsigned long
+	+gasMileage: float
+	+extras: string
+}
+
+Interface ICar{
+	+openDoors(): void
+	+closeDoors(): void
+	+areDoorsOpen(): boolean
+	+enableImmobilizer(): void
+	+disableImmobilizer(): void
+	+isKeyPresent(): boolean
+}
+Interface IAdminDB
+Interface IPayment
+Interface IBank
+Interface IDataBaseCon
+Class GPS
+{
+	-longitude: double
+	-latitude: double
+	-altitude: double
+}
+Class RFID
+Class Pole{
+	-id: unsigned long long
+	-blinkTimer: unsigned long long
+	+mainThread(): short
+	+blinkSignalOn(): void
+	+blinkSignalOff(): void
+}
+Class DataBaseConnector
+Class Payment
+Class CarModule
+{
+	-blinkTimer: unsigned long long
+	+mainThread(): short
+	+blinkSignalOn(): void
+	+blinkSignalOff(): void
+}
+Abstract Application
+{
+
+}
+Class ClientApplication
+Class AdminApplication
+Class Car{
+	-doorsOpen: boolean
+	-immobilizer: boolean
+	-keyPresent: boolean
+}
+Class Bank
+Class DataBase
+
+Class PoleDataBaseCon
+{
+	-id: unsigned long long
+	+getId(): unsigned long long
+	+blinkSignalOn: void(void)
+	+blinkSignalOff: void(void)
+}
+
+Class CarDataBaseCon
+{
+	-id: unsigned long long
+	+getId(): unsigned long long
+	+blinkSignalOn: void(void)
+	+blinkSignalOff: void(void)
+}
+
+IClientDB <|.. IAdminDB
+IPositional <|.. GPS
+ICloseCommunication <|.. RFID
+ICloseCommunication <- Pole
+Pole 	-> ICheckInDB
+ICheckInDB <|.. PoleDataBaseCon
+IAdminDB <|... DataBaseConnector
+ICarDB <|.. CarDataBaseCon
+PoleDataBaseCon <-- DataBaseConnector
+CarDataBaseCon <-- DataBaseConnector
+IDataBaseCon <|.. ICheckInDB
+IDataBaseCon <|.. ICarDB
+IDataBaseCon <|.. IClientDB 
+DataBaseConnector 	-> IPayment
+IPayment <|.. Payment
+IBank <- Payment
+ICarDB <- CarModule
+CarModule 	-> IPositional
+ICar <-- CarModule
+IClientDB <- ClientApplication
+IAdminDB <- AdminApplication
+ClientApplication 	-|> Application
+Application <|-- AdminApplication
+ICloseCommunication <- CarModule
+ICar <|. Car
+IBank <|.. Bank
+IPositional .> Position
+CarDetails <.. IDataBaseCon
+Reservation <.. IDataBaseCon
+Reservation 	-> CarDetails
+Subscription <-- Reservation
+User <. IDataBaseCon
+OpenPayment <. IDataBaseCon
+User <--> OpenPayment
+CarDetails 	-> CarStatus
+OpenPayment 	-[hidden]> ICar
+DataBase <- DataBaseConnector
+
+@enduml

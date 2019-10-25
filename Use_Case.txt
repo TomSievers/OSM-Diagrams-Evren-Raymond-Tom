@@ -1,0 +1,46 @@
+@startuml
+skinparam packageStyle rectangle
+left to right direction
+
+:Mogelijke klant:
+
+:Klant:
+
+:Systeembeheerder:
+
+:Bank:
+
+rectangle RedCars{
+
+(Registreren)
+
+(Beschikbare auto's inzien)
+(Auto reserveren)
+(Gereserveerde auto ophalen)
+(Auto terugbrengen)
+(Auto openen)
+(Auto afsluiten)
+(Abonnement kiezen)
+(Inloggen)
+
+(Klantgegevens beheren) <<CRUD>>
+(Autogegevens beheren) <<CRUD>>
+
+(Huur betalen)
+
+Klant -- (Inloggen)
+(Inloggen) -- (Auto reserveren)
+(Inloggen) -- (Abonnement kiezen)
+Klant -- (Beschikbare auto's inzien)
+Klant -- (Gereserveerde auto ophalen)
+Klant -- (Auto terugbrengen)
+Klant -- (Auto openen)
+Klant -- (Auto afsluiten)
+:Mogelijke klant: -- (Registreren)
+Systeembeheerder -- (Klantgegevens beheren)
+Systeembeheerder -- (Autogegevens beheren)
+(Auto terugbrengen) -- (Huur betalen)
+(Huur betalen) -- Bank
+}
+
+@enduml
