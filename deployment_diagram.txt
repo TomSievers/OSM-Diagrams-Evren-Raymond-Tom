@@ -1,0 +1,38 @@
+@startuml
+
+node Pole {
+	component Check_In_Point
+	component Pass_Identifier
+}
+
+node Car {
+	component Car_Module
+	component Pass_Identifier_
+	component GPS_Tracker
+}
+
+node Workstation {
+	component Client_Application
+	component Admin_Application
+}
+
+node Server {
+	component Payment
+	component Database_Connector
+	artifact Database
+}
+
+Check_In_Point .> Database_Connector
+Database_Connector <.. Car_Module
+Admin_Application ..> Database_Connector
+Client_Application ..> Database_Connector
+Workstation --- Server: TCP/IP
+Pole -- Server: TCP/IP
+Server - Car: TCP/IP
+Database_Connector .> Database
+Database_Connector ..> Payment
+Car_Module .> GPS_Tracker
+Check_In_Point ..> Pass_Identifier
+Car_Module ..> Pass_Identifier_
+
+@enduml

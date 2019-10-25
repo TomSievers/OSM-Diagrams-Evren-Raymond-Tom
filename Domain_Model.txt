@@ -76,6 +76,3 @@ Autogegevens "1" --* "1" Auto
 Autogegevens "0..*" - "0..*" Medewerker: < past aan
 
 @enduml
-
-
-
