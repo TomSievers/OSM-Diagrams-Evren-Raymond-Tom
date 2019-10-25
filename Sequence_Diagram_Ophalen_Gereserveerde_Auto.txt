@@ -28,7 +28,7 @@ alt reserved
 		Pole -> Pole: displayMessage("You can't check in because you have an open payment.") : void
 	end
 else
-	
+	Pole -> Pole: displayMessage("No reservation has been found.") : void
 end
 
 
