@@ -1,6 +1,11 @@
 @startuml
 
-Interface IClientDB
+Interface IClientSession
+{
+	+getUser(userId: unsigned long long): User
+	+updateUser(updatedUser: User): boolean
+	+searchCar(searchQuery: string, dataBase: IDataBaseCon): CarDetails[0..*]
+}
 Interface ICheckInDB
 {
 	+hasReservation(poleId: unsigned long long, cardId: unsigned long long): boolean
@@ -16,74 +21,15 @@ Interface IPositional
 {
 	+getPosition(): Position
 }
-Class Position <<struct>>
-{
-	+longitude: double
-	+latitude: double
-	+altitude: double
-}
+
 Interface ICarDB
 {
-	+getReservationForCar(id: unsigned long long): Reservation
+	+getReservedCardId(id: unsigned long long): unsigned long long
 	+updatePosition(currentPosition: Position): void
 	+updateCarStatus(status: CarStatus):void
 	+carBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
 }
 
-enum CarStatus{
-	DOORS_CLOSED_AT_REDCARS
-	DOORS_OPEN_AT_REDCARS
-	PARKED
-	ACTIVE
-	PARKED_AT_REDCARS
-}
-
-Class Reservation<<struct>>
-{
-	+id: unsigned long long
-	+cardId: unsigned long long
-	+startTime: unsigned long long
-	+endTime: unsigned long long
-	+checkedIn: boolean
-	+completed: boolean
-}
-
-Class User<<struct>>
-{
-	+name: string
-	+address: string
-	+reputation: short
-	+accountActive: boolean
-	+id: unsigned long long
-	+cardId: unsigned long long
-	+bankAccountNumber: string
-	+emailaddress: string
-}
-
-Class OpenPayment<<struct>>
-{
-	+id: unsigned long long
-	+amount: float
-}
-
-enum Subscription{
-	BETAALD
-	GRATIS
-}
-
-Class CarDetails<<struct>>
-{
-	+id: unsigned long long
-	+brand: string
-	+licensePlate: string
-	+noDoors: unsigned short
-	+horsePower: unsigned short
-	+cargoSpace: unsigned short
-	+noSeats: unsigned short
-	+mileage: unsigned long
-	+gasMileage: float
-	+extras: string
-}
 
 Interface ICar{
 	+openDoors(): void
@@ -92,11 +38,23 @@ Interface ICar{
 	+enableImmobilizer(): void
 	+disableImmobilizer(): void
 	+isKeyPresent(): boolean
+	+lightsOn(): void
+	+lightsOff(): void
 }
-Interface IAdminDB
+Interface IAdminSession
+{
+	+updateCar(updatedCar: CarDetails): boolean
+}
 Interface IPayment
+{
+	+sendInvoice(reservation: Reservation): void
+	+reservationToInvoice(reservation: Reservation): OpenPayment
+}
 Interface IBank
-Interface IDataBaseCon
+{
+	+recieveInvoice(id: unsigned long long, bankAccountNumber: string, amount: float): void
+	+checkInvoiceStatus(id: unsigned long long): InvoiceStatus
+}
 Class GPS
 {
 	-longitude: double
@@ -111,8 +69,12 @@ Class Pole{
 	+blinkSignalOn(): void
 	+blinkSignalOff(): void
 }
-Class DataBaseConnector
+Class Session
 Class Payment
+{
+	-handlingPayments: OpenPayment[0..*]
+	+mainThread(): short
+}
 Class CarModule
 {
 	-blinkTimer: unsigned long long
@@ -122,10 +84,27 @@ Class CarModule
 }
 Abstract Application
 {
-
+	#login(email: string, password: string): short
+	{abstract}#editUser(updatedUser: User): boolean
+	{abstract}+mainThread(): short
 }
 Class ClientApplication
+{
+	-registerUser(name: string, address: string, email: string, bankAccountNumber: string): boolean
+	-setSubscription(newSub: Subscription): boolean
+	-makeReservation(carId: unsigned long long,\n userId: unsigned long long,\n startTime: unsigned long long,\n endTime: unsigned long long): boolean
+	
+}
 Class AdminApplication
+{
+	-createAdmin(email:string, password: string): boolean
+	-editCar(updatedCar: CarDetails): boolean
+}
+Class UserSession
+{
+	-id: unsigned long long
+	-userId: unsinged long long
+}
 Class Car{
 	-doorsOpen: boolean
 	-immobilizer: boolean
@@ -133,8 +112,14 @@ Class Car{
 }
 Class Bank
 Class DataBase
+{
+	ReservationDataBase: Reservation[0..*]
+	CarDetailDataBase: CarDetails[0..*]
+	OpenPaymentDataBase: OpenPayment[0..*]
+	UserDataBase: User[0..*]
+}
 
-Class PoleDataBaseCon
+Class PoleSession
 {
 	-id: unsigned long long
 	+getId(): unsigned long long
@@ -142,7 +127,7 @@ Class PoleDataBaseCon
 	+blinkSignalOff: void(void)
 }
 
-Class CarDataBaseCon
+Class CarSession
 {
 	-id: unsigned long long
 	+getId(): unsigned long long
@@ -150,42 +135,135 @@ Class CarDataBaseCon
 	+blinkSignalOff: void(void)
 }
 
-IClientDB <|.. IAdminDB
+Abstract Session
+{
+	-id: unsigned long long
+	+getId(): unsigned long long
+}
+
+Class SessionHandler
+{
+}
+
+Package DataTypes
+{
+	Class Reservation<<struct>>
+	{
+		+id: unsigned long long
+		+cardId: unsigned long long
+		+startTime: unsigned long long
+		+endTime: unsigned long long
+		+checkedIn: boolean
+		+startMileage: unsigned long long
+		+endMileage: unsigned long long
+		+completed: boolean
+	}
+
+	Class User<<struct>>
+	{
+		+name: string
+		+address: string
+		+reputation: short
+		+accountActive: boolean
+		+id: unsigned long long
+		+cardId: unsigned long long
+		+bankAccountNumber: string
+		+email: string
+	}
+
+	Class OpenPayment<<struct>>
+	{
+		+id: unsigned long long
+		+amount: float
+		+status: InvoiceStatus
+	}
+	enum CarStatus{
+		DOORS_CLOSED_AT_REDCARS
+		DOORS_OPEN_AT_REDCARS
+		PARKED
+		ACTIVE
+		PARKED_AT_REDCARS
+	}
+
+
+
+	enum Subscription{
+		BETAALD
+		GRATIS
+	}
+	
+	enum InvoiceStatus{
+		PENDING
+		PROCESSING
+		PAID
+		REJECTED
+	}
+
+	Class CarDetails<<struct>>
+	{
+		+id: unsigned long long
+		+brand: string
+		+licensePlate: string
+		+noDoors: unsigned short
+		+horsePower: unsigned short
+		+cargoSpace: unsigned short
+		+noSeats: unsigned short
+		+mileage: unsigned long
+		+gasMileage: float
+		+extras: string
+	}
+}
+
+Class Position <<struct>>
+{
+	+longitude: double
+	+latitude: double
+	+altitude: double
+}
+Package DataTypes_{
+}
+
+note bottom of DataTypes_
+	The DataBase class includes 
+	the "DataTypes" package
+end note
+
+IClientSession <|.. IAdminSession
 IPositional <|.. GPS
 ICloseCommunication <|.. RFID
 ICloseCommunication <- Pole
 Pole 	-> ICheckInDB
-ICheckInDB <|.. PoleDataBaseCon
-IAdminDB <|... DataBaseConnector
-ICarDB <|.. CarDataBaseCon
-PoleDataBaseCon <-- DataBaseConnector
-CarDataBaseCon <-- DataBaseConnector
-IDataBaseCon <|.. ICheckInDB
-IDataBaseCon <|.. ICarDB
-IDataBaseCon <|.. IClientDB 
-DataBaseConnector 	-> IPayment
+ICheckInDB <|.. PoleSession
+IAdminSession <|.. UserSession
+UserSession --|> Session
+ICarDB <|.. CarSession
+PoleSession --|> Session
+CarSession --|> Session
 IPayment <|.. Payment
-IBank <- Payment
+Payment --> IBank
 ICarDB <- CarModule
 CarModule 	-> IPositional
 ICar <-- CarModule
-IClientDB <- ClientApplication
-IAdminDB <- AdminApplication
+IClientSession <- ClientApplication
+IAdminSession <- AdminApplication
 ClientApplication 	-|> Application
 Application <|-- AdminApplication
 ICloseCommunication <- CarModule
 ICar <|. Car
 IBank <|.. Bank
 IPositional .> Position
-CarDetails <.. IDataBaseCon
-Reservation <.. IDataBaseCon
 Reservation 	-> CarDetails
 Subscription <-- Reservation
-User <. IDataBaseCon
-OpenPayment <. IDataBaseCon
 User <--> OpenPayment
 CarDetails 	-> CarStatus
 OpenPayment 	-[hidden]> ICar
-DataBase <- DataBaseConnector
-
+DataBase <- Session
+Session <-- SessionHandler
+PoleSession ---> IPayment
+DataBase ..> DataTypes_
+DataTypes <.. IClientSession
+DataTypes <.. Application
+IPayment .> DataTypes_
+OpenPayment ->InvoiceStatus
+DataBase <.. IPayment
 @enduml

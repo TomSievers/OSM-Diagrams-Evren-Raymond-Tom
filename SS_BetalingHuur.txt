@@ -1,0 +1,11 @@
+@startuml
+
+actor Bank as mainActor
+participant System
+
+System -> mainActor :sendInvoice(id, bankAccountNumber, amount)
+group On Payment Status Change
+	mainActor -> System: returnStatus(newStatus)
+end
+
+@enduml

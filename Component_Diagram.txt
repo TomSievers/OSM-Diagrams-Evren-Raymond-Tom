@@ -1,0 +1,43 @@
+@startuml
+
+component Database_Connector as DB_Con
+component Client_Application
+component Admin_Application
+component Car_Module
+component Check_In_Point
+component GPS_Tracker
+component Pass_Identifier
+component Payment
+interface Car_DB_Interface
+interface Client_DB_Interface
+interface Admin_DB_Interface
+interface Check_In_DB_Interface
+interface Positional_Interface
+interface Pass_Interface
+interface Payment_Interface
+interface Bank_Interface
+interface Car_Interface
+
+DB_Con - Car_DB_Interface
+DB_Con -- Admin_DB_Interface
+Check_In_DB_Interface -- DB_Con
+Client_DB_Interface -- DB_Con
+Check_In_DB_Interface )- Check_In_Point
+Car_DB_Interface )- Car_Module
+Admin_DB_Interface )-- Admin_Application
+Client_Application -( Client_DB_Interface
+Positional_Interface - GPS_Tracker
+Car_Module -( Positional_Interface
+Pass_Interface - Pass_Identifier
+Check_In_Point -( Pass_Interface
+Pass_Interface )-- Car_Module
+Payment - Payment_Interface
+Payment_Interface )- DB_Con
+Client_Application -[hidden]--> Payment
+Payment --( Bank_Interface
+Car_Module --( Car_Interface
+
+
+
+
+@enduml
