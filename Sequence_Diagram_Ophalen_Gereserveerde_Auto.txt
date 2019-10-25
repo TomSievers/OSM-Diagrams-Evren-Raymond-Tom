@@ -5,8 +5,12 @@ participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
 participant ICheckInDB as DB
 
+activate Pole
+activate DB
+
 Client -> RFID: presentCard(card) : void
 
+activate RFID
 Pole -> Pole: cardPresent = false
 
 loop cardPresent == false
@@ -14,6 +18,8 @@ loop cardPresent == false
 end
 
 Pole -> RFID: sig = readSignature() : string
+deactivate RFID
+
 create "card:Card" as Card
 Pole -> Card: card = Card(sig)
 Pole -> DB: reserved = hasReservation(id, card.id) : boolean
@@ -31,5 +37,6 @@ else
 	Pole -> Pole: displayMessage("No reservation has been found.") : void
 end
 
+Pole -> Card !!: delete
 
 @enduml
