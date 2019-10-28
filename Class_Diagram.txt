@@ -71,6 +71,7 @@ Class Pole{
 	+mainThread(): short
 	+blinkSignalOn(): void
 	+blinkSignalOff(): void
+	+displayMessage(message: string): void
 }
 Class Session
 Class Payment
@@ -96,6 +97,7 @@ Class ClientApplication
 	-registerUser(name: string, address: string, email: string, bankAccountNumber: string): boolean
 	-setSubscription(newSub: Subscription): boolean
 	-makeReservation(carId: unsigned long long,\n userId: unsigned long long,\n startTime: unsigned long long,\n endTime: unsigned long long): boolean
+	-displayMessage(message: string): void
 	
 }
 Class AdminApplication
@@ -283,7 +285,7 @@ Class Card
 	+getId():unsigned long long 
 }
 
-Class Position <<struct>>
+Class Position <<(S, yellow) struct>>
 {
 	+longitude: double
 	+latitude: double
