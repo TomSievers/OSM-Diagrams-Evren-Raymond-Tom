@@ -2,8 +2,28 @@
 
 participant PoleSession as pSession
 participant "p:Payment" as p
+participant Database as Database
+participant "b:Bank" as b
+participant "newOpenPayment: OpenPayment" as pOP
 
+activate pSession
 pSession -> p: sendInvoice(reservation: Reservation): void
-
+activate p
+	p -> p: reservationToInvoice(reservation: Reservation): newOpenPayment: OpenPayment
+	activate p	
+		create pOP
+		p -> pOP: OpenPayment(amount: unsigned long long)
+		p -> Database: addNewOpenPayment(newOpenPayment: OpenPayment)
+	deactivate p
+	p -> b: recieveInvoice(id: unsigned long long, bankAccountNumber: string, amount:float): void
+deactivate p
+loop payment:handlingPayments
+	p -> p: newStatus = checkInvoiceStatus(payment.id): Invoicestatus
+	activate p
+	opt newStatus != payment.status
+		p->p: payment.status = newStatus	
+	end
+	deactivate p
+end
 
 @enduml
