@@ -33,12 +33,6 @@ Interface ICarDB
 	+carBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
 }
 
-Class Card <<struct>>
-{
-	+cardId : unsigned long long
-	+Card(signature:string)
-}
-
 Interface ICar{
 	+openDoors(): void
 	+closeDoors(): void
@@ -155,37 +149,87 @@ Class SessionHandler
 
 Package DataTypes
 {
-	Class Reservation<<struct>>
+	Class CarDetails
 	{
-		+id: unsigned long long
-		+cardId: unsigned long long
-		+startTime: unsigned long long
-		+endTime: unsigned long long
-		+checkedIn: boolean
-		+startMileage: unsigned long long
-		+endMileage: unsigned long long
-		+completed: boolean
+		-id: unsigned long long
+		-brand: string
+		-licensePlate: string
+		-noDoors: unsigned short
+		-noSeats: unsigned short
+		-extras: string
+		+getId():unsigned long long
+		+getBrand():string
+		+getLicensePlate():string
+		+getNoDoors():unsigned short
+		+setNoDoors(noDoors:unsigned short):void
+		+getNoSeats():unsigned short
+		+setNoSeats(noSeats:unsigned short):void
+		+getExtras():string
+		+setExtras(extras:string):void
 	}
 
-	Class User<<struct>>
+	Class Reservation
 	{
-		+name: string
-		+address: string
-		+reputation: short
-		+accountActive: boolean
-		+id: unsigned long long
-		+cardId: unsigned long long
-		+bankAccountNumber: string
-		+email: string
+		-id: unsigned long long
+		-startTime: unsigned long long
+		-endTime: unsigned long long
+		-checkedIn: boolean
+		-startMileage: unsigned long long
+		-endMileage: unsigned long long
+		-completed: boolean
+		+getid():unsigned long long
+		+getCardId():unsigned long long
+		+getStartTime(): unsigned long long
+		+getEndTime():unsigned long long
+		+isCheckedIn():boolean
+		+setChecked(checkedIn:boolean):void
+		+getStartMileage():unsigned long long
+		+setStartMileage(mileage:unsigned long long):void
+		+getEndMileage():unsigned long long
+		+setEndMileage(mileage:unsigned long long):void
+		+isCompleted():boolean
+		+setCompleted(isCompleted:boolean):void
 	}
 
-	Class OpenPayment<<struct>>
+
+
+	Class User
 	{
-		+id: unsigned long long
-		+amount: float
-		+status: InvoiceStatus
+		-id: unsigned long long
+		-name: string
+		-address: string
+		-reputation: short
+		-accountActive: boolean
+		-cardId: unsigned long long
+		-bankAccountNumber: string
+		-email: string
+		+getId():unsigned long long
+		+getName():string
+		+setName(name:string):void
+		+getAddress():string
+		+setAddress(address:string):void
+		+getReputation():short
+		+setReputation(reputation:short):void
+		+getCardId:unsigned long long
+		+getBankAccountNumber():string
+		+setBankAccountNumber(bank:string):void
+		+getEmail():string
+		+setEmail(email:string):void
 	}
-	enum CarStatus{
+
+	Class OpenPayment
+	{
+		-id: unsigned long long
+		-amount: float
+		-status: InvoiceStatus
+		+getId():unsigned long long
+		+getAmount():float
+		+getStatus():InvoiceStatus
+		+setStatus(status:InvoiceStatus)
+	}
+
+	enum CarStatus
+	{
 		DOORS_CLOSED_AT_REDCARS
 		DOORS_OPEN_AT_REDCARS
 		PARKED
@@ -193,33 +237,25 @@ Package DataTypes
 		PARKED_AT_REDCARS
 	}
 
-
-
-	enum Subscription{
+	enum Subscription
+	{
 		BETAALD
 		GRATIS
 	}
 	
-	enum InvoiceStatus{
+	enum InvoiceStatus
+	{
 		PENDING
 		PROCESSING
 		PAID
 		REJECTED
 	}
+}
 
-	Class CarDetails<<struct>>
-	{
-		+id: unsigned long long
-		+brand: string
-		+licensePlate: string
-		+noDoors: unsigned short
-		+horsePower: unsigned short
-		+cargoSpace: unsigned short
-		+noSeats: unsigned short
-		+mileage: unsigned long
-		+gasMileage: float
-		+extras: string
-	}
+Class Card
+{
+	-id : unsigned long long
+	+getId():unsigned long long 
 }
 
 Class Position <<struct>>
@@ -228,6 +264,7 @@ Class Position <<struct>>
 	+latitude: double
 	+altitude: double
 }
+
 Package DataTypes_{
 }
 
@@ -260,9 +297,9 @@ ICloseCommunication <- CarModule
 ICar <|. Car
 IBank <|.. Bank
 IPositional .> Position
-Reservation 	-> CarDetails
+Reservation -> CarDetails
 Subscription <-- Reservation
-User <--> OpenPayment
+OpenPayment <--> User
 CarDetails 	-> CarStatus
 OpenPayment 	-[hidden]> ICar
 DataBase <- Session
@@ -272,7 +309,9 @@ DataBase ..> DataTypes_
 DataTypes <.. IClientSession
 DataTypes <.. Application
 IPayment .> DataTypes_
-OpenPayment ->InvoiceStatus
+OpenPayment -> InvoiceStatus
 DataBase <.. IPayment
-Pole --> Card
+Card --> Pole
+User --> Card
+Reservation --> Card
 @enduml
