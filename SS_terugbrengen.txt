@@ -1,0 +1,6 @@
+@startuml
+actor Client
+Client -> System : checkOut(passId)
+Client <-- System : displayMessage(message)
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+actor Client
+participant "RFID:RFID" as RFID 
+participant "pole:Pole" as Pole
+participant "card:Card" as Card
+participant "poleSession:IPoleSession" as IPoleSession
+participant "carSession:CarSession" as CarSession
+participant "carModule:CarModule" as CarModule
+
+Activate Pole
+Client -> RFID : presentCard(cardId) : void
+Activate RFID
+Pole -> RFID : cardPresent = isCardPresent() : boolean
+opt carPresent == true
+    Pole -> RFID : signature = readSignature() : unsigned long long
+    Pole -> Card ** : Card(signature)
+    Pole -> IPoleSession : inUse = hasCarInUse(cardId : unsigned long long, cardId : unsigned long long) : boolean
+    opt inUse == true
+        Pole -> IPoleSession : checkOut(cardId : unsigned long long)
+        Pole <-- IPoleSession : blinkSignalOff() : void
+    end
+end
+
+opt CarSession.database.cardetails.carstatus == DOORS_CLOSED_AT_REDCARS
+CarSession -> CarModule : blinkSignalOn() : void
+end
+
+opt CarSession.database.cardetails.completed == true
+CarSession -> CarModule : blinkSignalOff() : void
+end
+
+@enduml

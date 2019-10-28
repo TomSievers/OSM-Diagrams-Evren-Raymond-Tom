@@ -8,7 +8,10 @@ Interface IClientSession
 }
 Interface ICheckInDB
 {
-	+hasReservation(poleId: unsigned long long, cardId: unsigned long long): boolean
+	+hasReservation(cardId: unsigned long long): boolean
+	+checkIn(cardId: unsigned long) : void
+	+checkOut(cardId: unsigned long) : void
+	+hasCarInUse(cardId:unsigned long long) : boolean
 	+returnCar(cardId: unsigned long long): boolean
 	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
 }
@@ -30,6 +33,11 @@ Interface ICarDB
 	+carBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
 }
 
+Class Card <<struct>>
+{
+	+cardId : unsigned long long
+	+Card(signature:string)
+}
 
 Interface ICar{
 	+openDoors(): void
@@ -266,4 +274,5 @@ DataTypes <.. Application
 IPayment .> DataTypes_
 OpenPayment ->InvoiceStatus
 DataBase <.. IPayment
+Pole --> Card
 @enduml
