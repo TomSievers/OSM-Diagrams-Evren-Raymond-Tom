@@ -291,7 +291,7 @@ CarModule 	-> IPositional
 ICar <-- CarModule
 IClientSession <- ClientApplication
 IAdminSession <- AdminApplication
-ClientApplication 	-|> Application
+ClientApplication -|> Application
 Application <|-- AdminApplication
 ICloseCommunication <- CarModule
 ICar <|. Car
@@ -301,7 +301,9 @@ Reservation -> CarDetails
 Subscription <-- Reservation
 OpenPayment <--> User
 CarDetails 	-> CarStatus
-OpenPayment 	-[hidden]> ICar
+AdminApplication -[hidden]> ICarDB
+ICheckInDB -[hidden]> IAdminSession
+Application -[hidden]> ICar
 DataBase <- Session
 Session <-- SessionHandler
 PoleSession ---> IPayment
@@ -311,7 +313,7 @@ DataTypes <.. Application
 IPayment .> DataTypes_
 OpenPayment -> InvoiceStatus
 DataBase <.. IPayment
-Card --> Pole
+Card <-- Pole
 User --> Card
 Reservation --> Card
 @enduml
