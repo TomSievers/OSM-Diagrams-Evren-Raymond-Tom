@@ -15,22 +15,50 @@ Activate Pole
 Client -> RFID : presentCard(cardId) : void
 Activate RFID
 Pole -> RFID : cardPresent = isCardPresent() : boolean
+Activate RFID
+Deactivate RFID
 opt carPresent == true
     Pole -> RFID : signature = readSignature() : string
+    Activate RFID
+    Deactivate RFID
+    Deactivate RFID
     Pole -> Card ** : <<create>>
     Pole -> Card : cardId = getId():unsigned long long
+    Activate Card
+    Deactivate Card
     Pole -> IPoleSession : inUse = hasCarInUse(cardId : unsigned long long, cardId : unsigned long long) : boolean
+    Activate IPoleSession
     IPoleSession -> Database : user = getUserFromCard(cardId:unsigned long long) : User
+    Activate Database
+    Deactivate Database
     IPoleSession -> User : reservation = getCurrentReservation() : Reservation
+    Activate User
+    Deactivate User
     IPoleSession -> cardReservation : checkedIn = isCheckedIn():boolean
+    Activate cardReservation
+    Deactivate cardReservation
+    Deactivate IPoleSession
     opt inUse == true
         Pole -> IPoleSession : onOriginal = carIsOnOriginalPosition(cardId: unsigned long long) : boolean
+        Activate IPoleSession
         IPoleSession -> cardReservation : carOnPickup = isCarOnPickupLocation() : boolean
+        Activate cardReservation
+        Deactivate cardReservation
+        Deactivate IPoleSession
         alt onOriginal == true
             Pole -> IPoleSession : checkOut(cardId : unsigned long long)
+            Activate IPoleSession
             IPoleSession -> cardReservation : setCompleted(isCompleted:boolean):void
+            Activate cardReservation
+            Deactivate cardReservation
             IPoleSession -> Database : editReservation(cardReservation:Reservation) : void
+            Activate Database
+            Deactivate Database
             Pole <-- IPoleSession : blinkSignalOff() : void
+            Activate Pole
+            Deactivate Pole
+            Client <-- Pole : displayMessage(message : string) : void
+            Deactivate IPoleSession
         else onOriginal == false
             Client <-- Pole : displayMessage(message : string): void
         end
@@ -41,9 +69,16 @@ end
 
 loop
     CarSession -> Database : reservation = getActiveReservationForCar(carId:unsigned long long) : Reservation
+    Activate CarSession
+    Activate Database
+    Deactivate Database
     CarSession -> Reservation : completed = isCompleted() : boolean
+    Activate Reservation
+    Deactivate Reservation
     opt completed == true
         CarSession -> Car : blinkSignalOff() : void
+        Activate Car
+        Deactivate Car
     end
 end
 
