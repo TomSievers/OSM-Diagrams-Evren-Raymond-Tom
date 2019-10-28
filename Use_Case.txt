@@ -20,17 +20,15 @@ rectangle RedCars{
 (Auto terugbrengen)
 (Auto openen)
 (Auto afsluiten)
-(Abonnement kiezen)
-(Inloggen)
+(Abonnement wijzigen)
 
 (Klantgegevens beheren) <<CRUD>>
 (Autogegevens beheren) <<CRUD>>
 
 (Huur betalen)
 
-Klant -- (Inloggen)
-(Inloggen) -- (Auto reserveren)
-(Inloggen) -- (Abonnement kiezen)
+Klant -- (Auto reserveren)
+Klant -- (Abonnement wijzigen)
 Klant -- (Beschikbare auto's inzien)
 Klant -- (Gereserveerde auto ophalen)
 Klant -- (Auto terugbrengen)

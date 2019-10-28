@@ -2,10 +2,12 @@
 
 participant PoleSession as pSession
 participant "p:Payment" as p
-participant Database as Database
-participant "b:Bank" as b
+participant IDataBaseConnector as Database
+participant "IBank" as b
 participant "newOpenPayment: OpenPayment" as pOP
+participant "existingOpenPayment: OpenPayment" as eOP
 
+===New Invoice==
 activate pSession
 pSession -> p: sendInvoice(reservation: Reservation): void
 activate p
@@ -13,17 +15,20 @@ activate p
 	activate p	
 		create pOP
 		p -> pOP: OpenPayment(amount: unsigned long long)
-		p -> Database: addNewOpenPayment(newOpenPayment: OpenPayment)
+		p -> Database: addOpenPayment(newOpenPayment: OpenPayment)
 	deactivate p
 	p -> b: recieveInvoice(id: unsigned long long, bankAccountNumber: string, amount:float): void
 deactivate p
-loop payment:handlingPayments
-	p -> p: newStatus = checkInvoiceStatus(payment.id): Invoicestatus
-	activate p
-	opt newStatus != payment.status
-		p->p: payment.status = newStatus	
+===Periodic Status Check==
+p -> Database: handlingPayments = getOpenPayment(): OpenPayment[0..*]
+loop existingOpenPayment:handlingPayments
+	p -> eOP: dataBaseState = getState(): Invoicestatus
+	p -> eOP: paymentId = getId(): unsigned long long
+	p -> b: bankState = getInvoiceStatus(paymentId: unsigned long long): Invoicestatus
+	opt dataBaseState != bankState
+		p->eOP: setStatus(newStatus: Invoicestatus): void
+		p->Database: editOpenPayment(existingOpenPayment: OpenPayment): void
 	end
-	deactivate p
 end
 
 @enduml

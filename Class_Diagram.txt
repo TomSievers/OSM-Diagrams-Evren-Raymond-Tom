@@ -119,12 +119,29 @@ Class Car{
 	-keyPresent: boolean
 }
 Class Bank
-Class DataBase
+
+Interface IDataBaseConnector
 {
-	ReservationDataBase: Reservation[0..*]
-	CarDetailDataBase: CarDetails[0..*]
-	OpenPaymentDataBase: OpenPayment[0..*]
-	UserDataBase: User[0..*]
+	+getUser(id: unsigned long long):User
+	+getUser():User[0..*]
+	+addUser(newUser: User):void
+	+editUser(updatedUser: User):void
+	+deleteUser(user: User):void
+	+getReservation(id: unsigned long long):Reservation
+	+getReservation():Reservation[0..*]
+	+addReservation():void
+	+editReservation():void
+	+deleteReservation():void
+	+getCar(id: unsigned long long):CarDetails
+	+getCar():Car[0..*]
+	+addCar():void
+	+editCar():void
+	+deleteCar():void
+	+getOpenPayment(id: unsigned long long):OpenPayment
+	+getOpenPayment():OpenPayment[0..*]
+	+addOpenPayment():void
+	+editOpenPayment():void
+	+deleteOpenPayment():void
 }
 
 Class PoleSession
@@ -265,14 +282,14 @@ Subscription <-- Reservation
 User <--> OpenPayment
 CarDetails 	-> CarStatus
 OpenPayment 	-[hidden]> ICar
-DataBase <- Session
+IDataBaseConnector <- Session
 Session <-- SessionHandler
 PoleSession ---> IPayment
-DataBase ..> DataTypes_
+IDataBaseConnector ..> DataTypes_
 DataTypes <.. IClientSession
 DataTypes <.. Application
 IPayment .> DataTypes_
 OpenPayment ->InvoiceStatus
-DataBase <.. IPayment
+IDataBaseConnector <.. IPayment
 Pole --> Card
 @enduml
