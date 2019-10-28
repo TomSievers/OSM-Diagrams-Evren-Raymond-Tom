@@ -4,29 +4,47 @@ participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
 participant "card:Card" as Card
 participant "poleSession:IPoleSession" as IPoleSession
+participant "currentUser:User" as User
+participant "cardReservation:Reservation" as cardReservation
+participant "databaseCon:IDataBaseConnector" as Database
+participant "carReservation:Reservation" as Reservation
 participant "carSession:CarSession" as CarSession
-participant "carModule:CarModule" as CarModule
+participant "car:CarModule" as Car
 
 Activate Pole
 Client -> RFID : presentCard(cardId) : void
 Activate RFID
 Pole -> RFID : cardPresent = isCardPresent() : boolean
 opt carPresent == true
-    Pole -> RFID : signature = readSignature() : unsigned long long
-    Pole -> Card ** : Card(signature)
+    Pole -> RFID : signature = readSignature() : string
+    Pole -> Card ** : <<create>>
+    Pole -> Card : cardId = getId():unsigned long long
     Pole -> IPoleSession : inUse = hasCarInUse(cardId : unsigned long long, cardId : unsigned long long) : boolean
+    IPoleSession -> Database : user = getUserFromCard(cardId:unsigned long long) : User
+    IPoleSession -> User : reservation = getCurrentReservation() : Reservation
+    IPoleSession -> cardReservation : checkedIn = isCheckedIn():boolean
     opt inUse == true
-        Pole -> IPoleSession : checkOut(cardId : unsigned long long)
-        Pole <-- IPoleSession : blinkSignalOff() : void
+        Pole -> IPoleSession : onOriginal = carIsOnOriginalPosition(cardId: unsigned long long) : boolean
+        IPoleSession -> cardReservation : carOnPickup = isCarOnPickupLocation() : boolean
+        alt onOriginal == true
+            Pole -> IPoleSession : checkOut(cardId : unsigned long long)
+            IPoleSession -> cardReservation : setCompleted(isCompleted:boolean):void
+            IPoleSession -> Database : editReservation(cardReservation:Reservation) : void
+            Pole <-- IPoleSession : blinkSignalOff() : void
+        else onOriginal == false
+            Client <-- Pole : displayMessage(message : string): void
+        end
     end
 end
 
-opt CarSession.database.cardetails.carstatus == DOORS_CLOSED_AT_REDCARS
-CarSession -> CarModule : blinkSignalOn() : void
-end
+===Turn off blink on car==
 
-opt CarSession.database.cardetails.completed == true
-CarSession -> CarModule : blinkSignalOff() : void
+loop
+    CarSession -> Database : reservation = getActiveReservationForCar(carId:unsigned long long) : Reservation
+    CarSession -> Reservation : completed = isCompleted() : boolean
+    opt completed == true
+        CarSession -> Car : blinkSignalOff() : void
+    end
 end
 
 @enduml
