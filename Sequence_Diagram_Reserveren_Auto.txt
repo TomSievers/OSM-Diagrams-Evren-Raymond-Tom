@@ -1,0 +1,26 @@
+@startuml
+
+actor Client
+participant "clientApplication:ClientApplication" as ClientApp
+activate ClientApp
+participant "DB" as DB
+activate DB
+participant "UserSession:UserSession" as UserSession
+activate UserSession
+
+Client -> ClientApp: reserve(carId) : void
+ClientApp -> ClientApp: displayMessage("From when till when do you want to make the reservation?") : void
+Client -> ClientApp: startEnd(startDate, endDate) : void
+ClientApp -> DB: hasOpenPayment = hasOpenPayment() : boolean
+alt !hasOpenPayment
+	ClientApp -> UserSession: userId = getId()
+	ClientApp -> ClientApp: succesfull = makeReservation(carId, userId, startDate, endDate) : boolean
+	alt succesfull
+		ClientApp -> ClientApp: displayMessage("Succesfully reserved.") : void
+	else
+		ClientApp -> ClientApp: displayMessage("Could not reserve.") : void
+	end
+else
+	ClientApp -> ClientApp: displayMessage("You can't check in because you have an open payment.") : void
+end
+@enduml
