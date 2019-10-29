@@ -46,6 +46,8 @@ Class Reservering{
 }	
 
 Class Module
+Class Klantregister
+Class Autoregister
 Class GPS_Tracker
 Class Paal
 Class Betalingsachterstand{
@@ -63,7 +65,7 @@ Auto <|-- Persoonswagen
 Reservering "0..*" - "1" Abonnement: \t
 Abonnement <|-- Gratis
 Abonnement <|-- Betaald
-Medewerker "0..*" - "0..*" Klantgegevens: > past aant
+Medewerker "0..*" - "1" Klantregister: > past aant
 Standplaats "0..1" - "0..*" Auto: < staat op
 Standplaats <|-- Parkeerplaats
 Auto "1" *-- "1" Module
@@ -73,6 +75,8 @@ Parkeerplaats "1..*" -- "1" Paal: < staat bij
 Standplaats "1" *-- "1" Locatie
 Reservering <|-- Betalingsachterstand
 Autogegevens "1" --* "1" Auto
-Autogegevens "0..*" - "0..*" Medewerker: < past aan
+Autoregister "1" - "0..*" Medewerker: < past aan
+Autoregister "1"--* "0..*" Autogegevens
+Klantregister "1"--* "0..*" Klantgegevens
 
 @enduml
