@@ -3,7 +3,7 @@
 actor Client
 participant "clientApplication:ClientApplication" as ClientApp
 activate ClientApp
-participant "clientSession:ClientSession" as ClientSession
+participant "IClientSession:IClientSession" as ClientSession
 activate ClientSession
 participant "userSession:UserSession" as UserSession
 activate UserSession
@@ -19,7 +19,7 @@ alt !hasOpenPayment
 	ClientApp -> ClientApp: succesfull = makeReservation(carId, userId, startDate, endDate) : boolean
 	activate ClientApp
 	alt succesfull
-		ClientApp -> IDataBaseConnector: addReservation() : void
+		ClientApp -> IDataBaseConnector: addReservation(userId, carId, startDate, endDate) : void
 		deactivate ClientApp
 		ClientApp -> ClientApp: displayMessage("Succesfully reserved.") : void
 	else
