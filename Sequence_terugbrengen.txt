@@ -17,7 +17,7 @@ Activate RFID
 Pole -> RFID : cardPresent = isCardPresent() : boolean
 Activate RFID
 Deactivate RFID
-opt carPresent == true
+opt cardPresent == true
     Pole -> RFID : signature = readSignature() : string
     Activate RFID
     Deactivate RFID
@@ -26,6 +26,7 @@ opt carPresent == true
     Pole -> Card : cardId = getId():unsigned long long
     Activate Card
     Deactivate Card
+    Pole -> Card !! : <<delte>>
     Pole -> IPoleSession : inUse = hasCarInUse(cardId : unsigned long long, cardId : unsigned long long) : boolean
     Activate IPoleSession
     IPoleSession -> Database : user = getUserFromCard(cardId:unsigned long long) : User

@@ -1,0 +1,25 @@
+@startuml
+
+participant "main" as main
+participant "pole:Pole" as Pole
+participant "communication:ICloseCommunication" as communication
+participant "session:IPoleSession" as session
+
+create Pole
+main -> Pole: <<Create>>
+main -> Pole: mainThread()
+
+create communication
+Pole -> communication: <<Create>>
+activate communication
+
+create session
+Pole -> session: <<Create>>
+activate session
+
+activate Pole
+loop till termination
+	Pole -> Pole: doShit()
+end
+
+@enduml
