@@ -5,6 +5,7 @@ Interface IClientSession
 	+getUser(userId: unsigned long long): User
 	+updateUser(updatedUser: User): boolean
 	+searchCar(searchQuery: string, dataBase: IDataBaseCon): CarDetails[0..*]
+	+hasOpenPayment(userId: unsigned long long):boolean
 }
 Interface IPoleSession
 {
@@ -15,6 +16,7 @@ Interface IPoleSession
 	+carIsOnOriginalPosition(cardId:unsigned long long) : boolean
 	+returnCar(cardId: unsigned long long): boolean
 	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
+	+hasOpenPayment(userId: unsigned long long):boolean
 }
 Interface ICloseCommunication
 {
@@ -65,7 +67,8 @@ Class GPS
 	-altitude: double
 }
 Class RFID
-Class Pole{
+Class Pole
+{
 	-id: unsigned long long
 	-blinkTimer: unsigned long long
 	+mainThread(): short
@@ -109,6 +112,7 @@ Class UserSession
 {
 	-id: unsigned long long
 	-userId: unsinged long long
+	+getId(): unsigned long long
 }
 Class Car{
 	-doorsOpen: boolean
@@ -128,7 +132,7 @@ Interface IDataBaseConnector
 	+getReservation(id: unsigned long long):Reservation
 	+getReservation():Reservation[0..*]
 	+getActiveReservationForCar(carId:unsigned long long):Reservation
-	+addReservation():void
+	+addReservation(userId:unsigned long long,\n carId:unsigned long long,\n startDate:unsigned long long,\n endDate:unsigned long long):void
 	+editReservation():void
 	+deleteReservation():void
 	+getCar(id: unsigned long long):CarDetails
