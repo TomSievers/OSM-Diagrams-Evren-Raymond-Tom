@@ -7,19 +7,19 @@ participant "session:IPoleSession" as session
 
 create Pole
 main -> Pole: <<Create>>
-main -> Pole: mainThread()
+
 
 create communication
 Pole -> communication: <<Create>>
-activate communication
 
 create session
 Pole -> session: <<Create>>
-activate session
-
-activate Pole
 loop till termination
-	Pole -> Pole: doShit()
+	main -> Pole: mainThread()
+	activate Pole
+	deactivate Pole
 end
+
+
 
 @enduml

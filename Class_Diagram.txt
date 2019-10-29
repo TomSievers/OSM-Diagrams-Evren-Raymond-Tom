@@ -192,6 +192,7 @@ Package DataTypes
 		+setNoSeats(noSeats:unsigned short):void
 		+getExtras():string
 		+setExtras(extras:string):void
+		+getPosition():Position
 	}
 
 	Class Reservation
@@ -215,8 +216,8 @@ Package DataTypes
 		+setEndMileage(mileage:unsigned long long):void
 		+isCompleted():boolean
 		+setCompleted(isCompleted:boolean):void
-		+getPickupLocation():Location
-		+setPickupLocation(location:Location):void
+		+getPickupLocation():Position
+		+setPickupLocation():void
 		+getCarLocation():Location
 		+isCarOnPickupLocation():boolean
 	}
