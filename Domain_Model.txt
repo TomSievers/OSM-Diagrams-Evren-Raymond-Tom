@@ -55,7 +55,7 @@ Class Betalingsachterstand{
 Klantgegevens "1" -* "1" Klant
 Klant "1" *- "1" Pas
 Pas "1" - "1" Klantgegevens: < bevat informatie van
-Klant "0..*" o-- "1" Abonnement
+Klant "0..*" *-- "1" Abonnement
 Klant "1" *-- "0..*" Reservering
 Auto "1" - "0..*" Reservering: < is gekoppeld met
 Auto <|-- Stationwagon
@@ -70,7 +70,7 @@ Auto "1" *-- "1" Module
 Module "1" *-- "1" GPS_Tracker
 Locatie "1" -- "0..*" GPS_Tracker: < houdt bij
 Parkeerplaats "1..*" -- "1" Paal: < staat bij
-Standplaats "1" o-- "1" Locatie
+Standplaats "1" *-- "1" Locatie
 Reservering <|-- Betalingsachterstand
 Autogegevens "1" --* "1" Auto
 Autogegevens "0..*" - "0..*" Medewerker: < past aan

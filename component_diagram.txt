@@ -8,15 +8,15 @@ component Check_In_Point
 component GPS_Tracker
 component Pass_Identifier
 component Payment
-interface Car_DB_Interface
-interface Client_DB_Interface
-interface Admin_DB_Interface
-interface Check_In_DB_Interface
-interface Positional_Interface
-interface Pass_Interface
-interface Payment_Interface
-interface Bank_Interface
-interface Car_Interface
+interface ICarDB as Car_DB_Interface
+interface IClientSession as Client_DB_Interface
+interface IAdminSession as Admin_DB_Interface
+interface ICheckInDB as Check_In_DB_Interface
+interface IPositional as Positional_Interface
+interface ICloseCommunication as Pass_Interface
+interface IPayment as Payment_Interface
+interface IBank as Bank_Interface
+interface ICar as Car_Interface
 
 DB_Con - Car_DB_Interface
 DB_Con -- Admin_DB_Interface
