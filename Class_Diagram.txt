@@ -19,7 +19,7 @@ Interface IPoleSession
 Interface ICloseCommunication
 {
 	+readSignature(): string
-	+cardPresent(): boolean
+	+isCardPresent(): boolean
 }
 Interface IPositional
 {
