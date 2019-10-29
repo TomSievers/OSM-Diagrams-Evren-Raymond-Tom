@@ -97,7 +97,7 @@ Class ClientApplication
 {
 	-registerUser(name: string, address: string, email: string, bankAccountNumber: string): boolean
 	-setSubscription(newSub: Subscription): boolean
-	-makeReservation(carId: unsigned long long,\n userId: unsigned long long,\n startTime: unsigned long long,\n endTime: unsigned long long): boolean
+	-makeReservation(startTime: unsigned long long,\n endTime: unsigned long long): void
 	-displayMessage(message: string): void
 	
 }
@@ -127,6 +127,7 @@ Interface IDataBaseConnector
 	+deleteUser(user: User):void
 	+getReservation(id: unsigned long long):Reservation
 	+getReservation():Reservation[0..*]
+	+getFirstReservationForCard(cardId: unsigned long long): Reservation
 	+getActiveReservationForCar(carId:unsigned long long):Reservation
 	+addReservation(userId:unsigned long long,\n carId:unsigned long long,\n startDate:unsigned long long,\n endDate:unsigned long long):void
 	+editReservation():void
@@ -141,6 +142,7 @@ Interface IDataBaseConnector
 	+addOpenPayment():void
 	+editOpenPayment():void
 	+deleteOpenPayment():void
+	+userHasOpenPayments(userId: unsigned long long): boolean
 }
 
 Class PoleSession
