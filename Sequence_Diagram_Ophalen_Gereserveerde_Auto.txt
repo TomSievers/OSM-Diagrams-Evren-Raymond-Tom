@@ -3,7 +3,7 @@
 actor Client
 participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
-participant ICheckInDB as DB
+participant "IPoleSession:IPoleSession" as DB
 participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
 
 activate Pole

@@ -2,12 +2,12 @@
 
 node Pole {
 	component Check_In_Point
-	component Pass_Identifier
+	component Close_Communication
 }
 
-node Car {
+node CarModule {
 	component Car_Module
-	component Pass_Identifier_
+	component "Close_Communication " as Close_Communication_
 	component GPS_Tracker
 }
 
@@ -22,18 +22,22 @@ node Server {
 	artifact Database
 }
 
-Check_In_Point .> Database_Connector
-Database_Connector <.. Car_Module
+artifact Car
+
+Check_In_Point .> Database_Connector 
+Database_Connector <... Car_Module
 Admin_Application ..> Database_Connector
 Client_Application ..> Database_Connector
 Workstation --- Server: TCP/IP
-Pole -- Server: TCP/IP
-Server - Car: TCP/IP
+Server -- Pole: TCP/IP
+Server -- CarModule: TCP/IP
 Database_Connector .> Database
 Database_Connector ..> Payment
 Car_Module .> GPS_Tracker
-Check_In_Point ..> Pass_Identifier
-Car_Module ..> Pass_Identifier_
+Check_In_Point ..> Close_Communication
+Car_Module ..> Close_Communication_
+
+Car <.. CarModule: CAN-Bus
 
 @enduml
 

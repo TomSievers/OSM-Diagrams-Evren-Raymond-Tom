@@ -6,26 +6,27 @@ Interface IClientSession
 	+updateUser(updatedUser: User): boolean
 	+searchCar(searchQuery: string, dataBase: IDataBaseCon): CarDetails[0..*]
 }
-Interface ICheckInDB
+Interface IPoleSession
 {
 	+hasReservation(cardId: unsigned long long): boolean
 	+checkIn(cardId: unsigned long) : void
 	+checkOut(cardId: unsigned long) : void
 	+hasCarInUse(cardId:unsigned long long) : boolean
+	+carIsOnOriginalPosition(cardId:unsigned long long) : boolean
 	+returnCar(cardId: unsigned long long): boolean
 	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
 }
 Interface ICloseCommunication
 {
 	+readSignature(): string
-	+cardPresent(): boolean
+	+isCardPresent(): boolean
 }
 Interface IPositional
 {
 	+getPosition(): Position
 }
 
-Interface ICarDB
+Interface ICarSession
 {
 	+getReservedCardId(id: unsigned long long): unsigned long long
 	+updatePosition(currentPosition: Position): void
@@ -119,12 +120,14 @@ Class Bank
 Interface IDataBaseConnector
 {
 	+getUser(id: unsigned long long):User
+	+getUserFromCard(cardId:unsigned long long):User
 	+getUser():User[0..*]
 	+addUser(newUser: User):void
 	+editUser(updatedUser: User):void
 	+deleteUser(user: User):void
 	+getReservation(id: unsigned long long):Reservation
 	+getReservation():Reservation[0..*]
+	+getActiveReservationForCar(carId:unsigned long long):Reservation
 	+addReservation():void
 	+editReservation():void
 	+deleteReservation():void
@@ -208,6 +211,10 @@ Package DataTypes
 		+setEndMileage(mileage:unsigned long long):void
 		+isCompleted():boolean
 		+setCompleted(isCompleted:boolean):void
+		+getPickupLocation():Location
+		+setPickupLocation(location:Location):void
+		+getCarLocation():Location
+		+isCarOnPickupLocation():boolean
 	}
 
 
@@ -234,6 +241,7 @@ Package DataTypes
 		+setBankAccountNumber(bank:string):void
 		+getEmail():string
 		+setEmail(email:string):void
+		+getCurrentReservation():Reservation
 	}
 
 	Class OpenPayment
@@ -292,47 +300,51 @@ note bottom of DataTypes_
 	the "DataTypes" package
 end note
 
-IClientSession <|.. IAdminSession
+IClientSession <|.. IAdminSession 
 IPositional <|.. GPS
 ICloseCommunication <|.. RFID
-ICloseCommunication <- Pole
-Pole 	-> ICheckInDB
-ICheckInDB <|.. PoleSession
+ICloseCommunication "1" <- Pole
+Pole -> "1" IPoleSession
+IPoleSession <|.. PoleSession
 IAdminSession <|.. UserSession
 UserSession --|> Session
-ICarDB <|.. CarSession
+ICarSession <|.. CarSession
 PoleSession --|> Session
 CarSession --|> Session
 IPayment <|.. Payment
-Payment --> IBank
-ICarDB <- CarModule
-CarModule 	-> IPositional
-ICar <-- CarModule
-IClientSession <- ClientApplication
-IAdminSession <- AdminApplication
+Payment --> "1" IBank
+ICarSession "1" <- CarModule
+CarModule -> "1" IPositional
+ICar "1" <-- CarModule
+IClientSession "1" <- ClientApplication
+IAdminSession "1" <- AdminApplication
 ClientApplication -|> Application
 Application <|-- AdminApplication
-ICloseCommunication <- CarModule
+ICloseCommunication "2" <- CarModule
 ICar <|. Car
 IBank <|.. Bank
 IPositional .> Position
-Reservation -> CarDetails
+CarDetails "1" <- Reservation
 Subscription <-- Reservation
-OpenPayment <--> User
-CarDetails 	-> CarStatus
-IDataBaseConnector <- Session
-AdminApplication -[hidden]> ICarDB
-ICheckInDB -[hidden]> IAdminSession
+OpenPayment "0..*" -- "1" User
+CarStatus "1" <- CarDetails
+IDataBaseConnector "1" <- Session
+AdminApplication -[hidden]> ICarSession
+IPoleSession -[hidden]> IAdminSession
 Application -[hidden]> ICar
-Session <-- SessionHandler
-PoleSession ---> IPayment
+Session "0..*" <-- SessionHandler
+PoleSession ---> "1" IPayment
 IDataBaseConnector ..> DataTypes_
 DataTypes <.. IClientSession
 DataTypes <.. Application
 IPayment .> DataTypes_
 IDataBaseConnector <.. IPayment
-OpenPayment -> InvoiceStatus
-Card <-- Pole
-User --> Card
-Reservation --> Card
+OpenPayment -> "1" InvoiceStatus
+Card "1" <-- Pole
+User --> "1" Card
+Reservation --> "1" Card
+Reservation -> "1" Position
+User "1" - "0..*" Reservation
+CarDetails -> "1" Position
+
 @enduml
