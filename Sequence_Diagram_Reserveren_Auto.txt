@@ -2,30 +2,31 @@
 
 actor Client
 participant "clientApplication:ClientApplication" as ClientApp
-activate ClientApp
 participant "IClientSession:IClientSession" as ClientSession
-activate ClientSession
 participant "userSession:UserSession" as UserSession
-activate UserSession
 participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
-activate IDataBaseConnector
+participant "newReservation: Reservation" as Reservation
 
-Client -> ClientApp: reserve(carId) : void
-ClientApp -> ClientApp: displayMessage("From when till when do you want to make the reservation?") : void
-Client -> ClientApp: startEnd(startDate, endDate) : void
+Client -> ClientApp: makeReservation(startDate: unsigned long long, endDate: unsigned long long) : void
+activate ClientApp
 ClientApp -> ClientSession: hasOpenPayment = hasOpenPayment() : boolean
-alt !hasOpenPayment
+activate ClientSession
+ClientSession -> IDataBaseConnector: hasOpenPayment = userHasOpenPayment(userId: unsigned long long): boolean
+activate IDataBaseConnector
+deactivate IDataBaseConnector
+deactivate ClientSession
+alt hasOpenPayment == false
 	ClientApp -> UserSession: userId = getId()
-	ClientApp -> ClientApp: succesfull = makeReservation(carId, userId, startDate, endDate) : boolean
-	activate ClientApp
-	alt succesfull
-		ClientApp -> IDataBaseConnector: addReservation(userId, carId, startDate, endDate) : void
-		deactivate ClientApp
-		ClientApp -> ClientApp: displayMessage("Succesfully reserved.") : void
-	else
-		ClientApp -> ClientApp: displayMessage("Could not reserve.") : void
-	end
+	activate UserSession
+	deactivate UserSession
+	create Reservation
+	ClientApp -> Reservation: <<create>>
+		ClientApp -> IDataBaseConnector: addReservation(newReservation: Reservation) : void
+		activate IDataBaseConnector
+		deactivate IDataBaseConnector
+		ClientApp -> Client: displayMessage(message: string) : void
 else
-	ClientApp -> ClientApp: displayMessage("You can't check in because you have an open payment.") : void
+	ClientApp -> Client: displayMessage(message: string) : void
+	deactivate ClientApp
 end
 @enduml
