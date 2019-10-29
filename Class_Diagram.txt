@@ -4,17 +4,16 @@ Interface IClientSession
 {
 	+getUser(userId: unsigned long long): User
 	+updateUser(updatedUser: User): boolean
-	+searchCar(searchQuery: string, dataBase: IDataBaseCon): CarDetails[0..*]
+	+searchCar(searchQuery: string): CarDetails[0..*]
 	+hasOpenPayment(userId: unsigned long long):boolean
 }
 Interface IPoleSession
 {
 	+hasReservation(cardId: unsigned long long): boolean
-	+checkIn(cardId: unsigned long) : void
-	+checkOut(cardId: unsigned long) : void
+	+checkIn(cardId: unsigned long long) : void
+	+checkOut(cardId: unsigned long long) : void
 	+hasCarInUse(cardId:unsigned long long) : boolean
 	+carIsOnOriginalPosition(cardId:unsigned long long) : boolean
-	+returnCar(cardId: unsigned long long): boolean
 	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
 	+hasOpenPayment(userId: unsigned long long):boolean
 }
@@ -76,7 +75,6 @@ Class Pole
 	+blinkSignalOff(): void
 	+displayMessage(message: string): void
 }
-Class Session
 Class Payment
 {
 	-handlingPayments: OpenPayment[0..*]
@@ -110,16 +108,14 @@ Class AdminApplication
 }
 Class UserSession
 {
-	-id: unsigned long long
-	-userId: unsinged long long
-	+getId(): unsigned long long
+	-userId: unsigned long long
+	+getUserId(): unsigned long long
 }
 Class Car{
 	-doorsOpen: boolean
 	-immobilizer: boolean
 	-keyPresent: boolean
 }
-Class Bank
 
 Interface IDataBaseConnector
 {
@@ -149,24 +145,24 @@ Interface IDataBaseConnector
 
 Class PoleSession
 {
-	-id: unsigned long long
-	+getId(): unsigned long long
+	-poleId: unsigned long long
+	+getPoleId(): unsigned long long
 	+blinkSignalOn: void(void)
 	+blinkSignalOff: void(void)
 }
 
 Class CarSession
 {
-	-id: unsigned long long
-	+getId(): unsigned long long
+	-carId: unsigned long long
+	+getCarId(): unsigned long long
 	+blinkSignalOn: void(void)
 	+blinkSignalOff: void(void)
 }
 
 Abstract Session
 {
-	-id: unsigned long long
-	+getId(): unsigned long long
+	-sessionid: unsigned long long
+	+getSessionId(): unsigned long long
 }
 
 Class SessionHandler
@@ -231,7 +227,6 @@ Package DataTypes
 		-address: string
 		-reputation: short
 		-accountActive: boolean
-		-cardId: unsigned long long
 		-bankAccountNumber: string
 		-email: string
 		+getId():unsigned long long
@@ -241,12 +236,16 @@ Package DataTypes
 		+setAddress(address:string):void
 		+getReputation():short
 		+setReputation(reputation:short):void
-		+getCardId:unsigned long long
+		+getCardId():unsigned long long
 		+getBankAccountNumber():string
 		+setBankAccountNumber(bank:string):void
 		+getEmail():string
 		+setEmail(email:string):void
 		+getCurrentReservation():Reservation
+		+getSubscription():Subscription
+		+setSubscription(subscription:Subscription):void
+		+addReservation(reservation: Reservation): void
+		+addOpenPayment(openPayment: OpenPayment): void
 	}
 
 	Class OpenPayment
@@ -327,7 +326,6 @@ ClientApplication -|> Application
 Application <|-- AdminApplication
 ICloseCommunication "2" <- CarModule
 ICar <|. Car
-IBank <|.. Bank
 IPositional .> Position
 CarDetails "1" <- Reservation
 Subscription <-- Reservation
@@ -345,11 +343,12 @@ DataTypes <.. Application
 IPayment .> DataTypes_
 IDataBaseConnector <.. IPayment
 OpenPayment -> "1" InvoiceStatus
-Card "1" <-- Pole
+Card "1" <.. Pole
 User --> "1" Card
-Reservation --> "1" Card
 Reservation -> "1" Position
 User "1" - "0..*" Reservation
 CarDetails -> "1" Position
+DataTypes <-- ICarSession
+Subscription <-- User
 
 @enduml
