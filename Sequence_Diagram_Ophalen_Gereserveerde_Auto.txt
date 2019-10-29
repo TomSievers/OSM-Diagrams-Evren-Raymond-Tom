@@ -3,10 +3,12 @@
 actor Client
 participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
-participant IPoleSession as DB
+participant "IPoleSession:IPoleSession" as DB
+participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
 
 activate Pole
 activate DB
+activate IDataBaseConnector
 
 Client -> RFID: presentCard(card) : void
 
@@ -14,7 +16,7 @@ activate RFID
 Pole -> Pole: cardPresent = false
 
 loop cardPresent == false
-	Pole -> RFID: cardPresent = cardPresent() : boolean
+	Pole -> RFID: cardPresent = isCardPresent() : boolean
 end
 
 Pole -> RFID: sig = readSignature() : string
@@ -24,14 +26,16 @@ create "card:Card" as Card
 Pole -> Card: card = Card(sig)
 Pole -> Card: cardId = getId()
 activate Card
-Pole -> DB: reserved = hasReservation(id, cardId) : boolean
-
+Pole -> DB: reserved = hasReservation(cardId) : boolean
+activate DB
+DB -> IDataBaseConnector: getReservation() : Reservation
+deactivate DB
 
 alt reserved
 	Pole -> DB: hasOpenPayment = hasOpenPayment(cardId) : boolean
 	alt !hasOpenPayment
 		Pole -> DB: checkIn(cardId) : void
-		Pole -> Pole: displayMessage("You are now checked in. You can retrieve the card with your card from the parking spot.") : void
+		Pole -> Pole: displayMessage("You are now checked in. You can retrieve the car with your card from the parking spot.") : void
 	else
 		Pole -> Pole: displayMessage("You can't check in because you have an open payment.") : void
 	end

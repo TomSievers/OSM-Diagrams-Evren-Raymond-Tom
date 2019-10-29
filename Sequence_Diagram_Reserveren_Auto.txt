@@ -3,19 +3,24 @@
 actor Client
 participant "clientApplication:ClientApplication" as ClientApp
 activate ClientApp
-participant "clientSession:ClientSession" as DB
-activate DB
+participant "IClientSession:IClientSession" as ClientSession
+activate ClientSession
 participant "userSession:UserSession" as UserSession
 activate UserSession
+participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
+activate IDataBaseConnector
 
 Client -> ClientApp: reserve(carId) : void
 ClientApp -> ClientApp: displayMessage("From when till when do you want to make the reservation?") : void
 Client -> ClientApp: startEnd(startDate, endDate) : void
-ClientApp -> DB: hasOpenPayment = hasOpenPayment() : boolean
+ClientApp -> ClientSession: hasOpenPayment = hasOpenPayment() : boolean
 alt !hasOpenPayment
 	ClientApp -> UserSession: userId = getId()
 	ClientApp -> ClientApp: succesfull = makeReservation(carId, userId, startDate, endDate) : boolean
+	activate ClientApp
 	alt succesfull
+		ClientApp -> IDataBaseConnector: addReservation(userId, carId, startDate, endDate) : void
+		deactivate ClientApp
 		ClientApp -> ClientApp: displayMessage("Succesfully reserved.") : void
 	else
 		ClientApp -> ClientApp: displayMessage("Could not reserve.") : void
