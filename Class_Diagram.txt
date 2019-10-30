@@ -97,9 +97,11 @@ Abstract Application
 }
 Class ClientApplication
 {
+	-currentCar : CarDetails
+	-chooseCar(licensePlate : string) : CarDetails
 	-registerUser(name: string, address: string, email: string, bankAccountNumber: string): boolean
 	-setSubscription(newSub: Subscription): boolean
-	-makeReservation(startTime: unsigned long long,\n endTime: unsigned long long): void
+	-makeReservation(startTime: unsigned long long, endTime: unsigned long long): void
 	-displayMessage(message: string): void
 	
 }
@@ -222,6 +224,8 @@ Package DataTypes
 		+setPickupLocation():void
 		+getCarLocation():Location
 		+isCarOnPickupLocation():boolean
+		+getReturnTime():unsigned long long
+		+setReturnTime(time : unsigned long long) : void
 	}
 
 	Class User
@@ -311,8 +315,8 @@ end note
 IClientSession <|.. IAdminSession 
 IPositional <|.. GPS
 ICloseCommunication <|.. RFID
-ICloseCommunication "1" <- Pole
-Pole -> "1" IPoleSession
+ICloseCommunication "communication" <- Pole : \t\t
+Pole -> "session" IPoleSession : \t
 IPoleSession <|.. PoleSession
 IAdminSession <|.. UserSession
 UserSession --|> Session
@@ -321,31 +325,31 @@ PoleSession --|> Session
 CarSession --|> Session
 IPayment <|.. Payment
 Payment --> "1" IBank
-ICarSession "1" <- CarModule
-CarModule -> "1" IPositional
-ICar "1" <-- CarModule
-IClientSession "1" <- "1" ClientApplication: session
-IAdminSession "1" <- "1"  AdminApplication: session
+ICarSession "session" <- CarModule : \t
+CarModule -> "GPS" IPositional
+ICar "car" <-- CarModule
+IClientSession "session" <- ClientApplication: session
+IAdminSession "session" <- AdminApplication: session
 ClientApplication -|> Application
 Application <|-- AdminApplication
-ICloseCommunication "2" <- CarModule
+ICloseCommunication "\t 2: carIdentification, passIdentification" <- CarModule
 ICar <|. Car
 IPositional .> Position
-CarDetails "1" <- "0..*" Reservation : car
-Subscription <-- Reservation
+CarDetails "1" <- "1..*" Reservation : car
+Subscription "subscription" <-- Reservation
 OpenPayment "0..*" -- "1" User: openPayments
 CarStatus "1" <- "0..*" CarDetails: status
-IDataBaseConnector "1" <- Session
+IDataBaseConnector "DBCon" <- Session : \t
 AdminApplication -[hidden]> ICarSession
 IPoleSession -[hidden]> IAdminSession
 Application -[hidden]> ICar
-Session "0..*" <-- SessionHandler
-PoleSession "1..*" ---> "1" IPayment: payment
+Session "0..* sessions" <-- SessionHandler
+PoleSession "1..*" ---> "payment" IPayment
 IDataBaseConnector ..> DataTypes_
 DataTypes <.. IClientSession
 DataTypes <.. Application
 IPayment .> DataTypes_
-IDataBaseConnector <.. IPayment
+IDataBaseConnector "DBCon" <-- IPayment
 OpenPayment "0..*" -> "1" InvoiceStatus: status
 Card "1" <.. Pole
 User --> "1" Card

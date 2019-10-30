@@ -7,6 +7,9 @@ participant "userSession:UserSession" as UserSession
 participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
 participant "newReservation: Reservation" as Reservation
 
+Client -> ClientApp : currentCar = chooseCar(licensePlate : string) : CarDetails
+activate ClientApp
+deactivate ClientApp
 Client -> ClientApp: makeReservation(startDate: unsigned long long, endDate: unsigned long long) : void
 activate ClientApp
 ClientApp -> ClientSession: hasOpenPayment = hasOpenPayment() : boolean
