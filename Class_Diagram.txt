@@ -219,6 +219,8 @@ Package DataTypes
 		+setPickupLocation():void
 		+getCarLocation():Location
 		+isCarOnPickupLocation():boolean
+		+getReturnTime():unsigned long long
+		+setReturnTime(time : unsigned long long) : void
 	}
 
 	Class User

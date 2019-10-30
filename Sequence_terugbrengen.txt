@@ -53,6 +53,9 @@ opt cardPresent == true
             IPoleSession -> cardReservation : setCompleted(isCompleted:boolean):void
             Activate cardReservation
             Deactivate cardReservation
+            IPoleSession -> cardReservation : setReturnTime(time:unsigned long long):void
+            Activate cardReservation
+            Deactivate cardReservation
             IPoleSession -> Database : editReservation(reservation:Reservation) : void
             Activate Database
             Deactivate Database
