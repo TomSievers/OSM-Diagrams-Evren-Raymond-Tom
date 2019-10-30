@@ -53,7 +53,7 @@ opt cardPresent == true
             IPoleSession -> cardReservation : setCompleted(isCompleted:boolean):void
             Activate cardReservation
             Deactivate cardReservation
-            IPoleSession -> Database : editReservation(cardReservation:Reservation) : void
+            IPoleSession -> Database : editReservation(reservation:Reservation) : void
             Activate Database
             Deactivate Database
             Pole <-- IPoleSession : blinkSignalOff() : void

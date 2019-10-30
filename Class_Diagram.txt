@@ -130,9 +130,9 @@ Interface IDataBaseConnector
 	+getFirstReservationForCard(cardId: unsigned long long): Reservation
 	+getActiveReservationForCard(cardId: unsigned long long) : Reservation
 	+getActiveReservationForCar(carId:unsigned long long): Reservation
-	+addReservation(userId:unsigned long long,\n carId:unsigned long long,\n startDate:unsigned long long,\n endDate:unsigned long long):void
-	+editReservation():void
-	+deleteReservation():void
+	+addReservationForUser(newReservation:Reservation , userId:unsigned long long):void
+	+editReservation(reservation:Reservation):void
+	+deleteReservation(id:unsigned long long):void
 	+getCar(id: unsigned long long):CarDetails
 	+getCar():Car[0..*]
 	+addCar():void
