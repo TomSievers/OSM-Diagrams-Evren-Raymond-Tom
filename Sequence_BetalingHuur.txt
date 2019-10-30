@@ -16,18 +16,34 @@ activate p
 		create pOP
 		p -> pOP: OpenPayment(amount: unsigned long long)
 		p -> Database: addOpenPayment(newOpenPayment: OpenPayment)
+		activate Database
+		deactivate Database
 	deactivate p
 	p -> b: recieveInvoice(id: unsigned long long, bankAccountNumber: string, amount:float): void
+	activate b
+	deactivate b
 deactivate p
 ===Periodic Status Check==
 p -> Database: handlingPayments = getOpenPayment(): OpenPayment[0..*]
+activate Database
+deactivate Database
 loop existingOpenPayment:handlingPayments
 	p -> eOP: dataBaseState = getState(): Invoicestatus
+	activate eOP
+	deactivate eOP
 	p -> eOP: paymentId = getId(): unsigned long long
+	activate eOP
+	deactivate eOP
 	p -> b: bankState = getInvoiceStatus(paymentId: unsigned long long): Invoicestatus
+	activate b
+	deactivate b
 	opt dataBaseState != bankState
 		p->eOP: setStatus(newStatus: Invoicestatus): void
-		p->Database: editOpenPayment(existingOpenPayment: OpenPayment): void
+		activate eOP
+		deactivate eOP
+		p->Database: editOpenPayment(updatedOpenPayment: OpenPayment): void
+		activate Database
+		deactivate Database
 	end
 end
 

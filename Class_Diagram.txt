@@ -131,7 +131,7 @@ Interface IDataBaseConnector
 	+getActiveReservationForCard(cardId: unsigned long long) : Reservation
 	+getActiveReservationForCar(carId:unsigned long long): Reservation
 	+addReservationForUser(newReservation:Reservation , userId:unsigned long long):void
-	+editReservation(reservation:Reservation):void
+	+editReservation(updatedReservation:Reservation):void
 	+deleteReservation(id:unsigned long long):void
 	+getCar(id: unsigned long long):CarDetails
 	+getCar():Car[0..*]
@@ -140,9 +140,9 @@ Interface IDataBaseConnector
 	+deleteCar():void
 	+getOpenPayment(id: unsigned long long):OpenPayment
 	+getOpenPayment():OpenPayment[0..*]
-	+addOpenPayment():void
-	+editOpenPayment():void
-	+deleteOpenPayment():void
+	+addOpenPayment(newOpenPayment:OpenPayment):void
+	+editOpenPayment(updatedOpenPayment:Payment):void
+	+deleteOpenPayment(id: unsigned long long):void
 	+userHasOpenPayments(userId: unsigned long long): boolean
 }
 
