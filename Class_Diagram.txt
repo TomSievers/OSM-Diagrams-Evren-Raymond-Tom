@@ -220,8 +220,6 @@ Package DataTypes
 		+isCarOnPickupLocation():boolean
 	}
 
-
-
 	Class User
 	{
 		-id: unsigned long long

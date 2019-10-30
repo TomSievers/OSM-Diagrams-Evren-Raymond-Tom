@@ -3,11 +3,13 @@
 actor Client
 participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
+participant "card:Card" as Card
 participant "IPoleSession:IPoleSession" as PoleSession
 participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
-participant "card:Card" as Card
+participant "user:User" as User
 participant "reservation:Reservation" as Reservation
 participant "carDetails:CarDetails" as CarDetails
+
 Activate Pole
 Client -> RFID : presentCard(cardId : unsigned long long) : void
 Activate RFID
@@ -24,10 +26,21 @@ opt cardPresent == true
 	activate Card
 	Pole -> Card !! : <<delete>>
 	Pole -> PoleSession: openPayment = hasOpenPayment(cardId) : boolean
+	activate PoleSession
+	PoleSession -> IDataBaseConnector : user = getUserFromCard(cardId : unsigned long long) : User
+	Activate IDataBaseConnector
+	deactivate IDataBaseConnector
+	PoleSession -> User : userId = getId() : unsigned long long
+	activate User
+	deactivate User
+	PoleSession -> IDataBaseConnector : hasOpenPayments = userHasOpenPayments(userId : unsigned long long) : boolean
+	Activate IDataBaseConnector
+	deactivate IDataBaseConnector
+	deactivate PoleSession
 	alt openPayment == false
 		Pole -> PoleSession: reserved = hasReservation(cardId : unsigned long long) : boolean
 		activate PoleSession
-		PoleSession -> IDataBaseConnector: reservations = getFirstReservationForCard(cardId : unsigned long long) : Reservation
+		PoleSession -> IDataBaseConnector: reservation = getFirstReservationForCard(cardId : unsigned long long) : Reservation
 		activate IDataBaseConnector
 		deactivate IDataBaseConnector
 		PoleSession -> Reservation : checkedIn = isCheckedIn() : boolean
@@ -37,6 +50,9 @@ opt cardPresent == true
 		alt reserved == true
 			Pole -> PoleSession : checkIn(cardId:unsigned long long) : void
 			activate PoleSession
+			PoleSession -> IDataBaseConnector: reservation = getFirstReservationForCard(cardId : unsigned long long) : Reservation
+			activate IDataBaseConnector
+			deactivate IDataBaseConnector
 			PoleSession -> Reservation : setCheckedIn(true) : void
 			activate Reservation
 			deactivate Reservation
