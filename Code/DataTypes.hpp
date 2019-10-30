@@ -21,6 +21,29 @@ namespace DataTypes
     class OpenPayment;
     typedef std::shared_ptr<Reservation> Reservation_ptr;
     typedef std::shared_ptr<OpenPayment> OpenPayment_ptr;
+
+    class CarDetails
+        {
+        private:
+        	ull_t id;
+        	short noDoors, noSeats;
+        	std::string brand, licensePlate, extras;
+        	Position position;
+        	CarStatus status;
+        public:
+    		const std::string& getBrand() const;
+    		const std::string& getExtras() const;
+    		void setExtras(const std::string &extras);
+    		ull_t getId() const;
+    		const std::string& getLicensePlate() const;
+    		short getNoDoors() const;
+    		void setNoDoors(short noDoors);
+    		short getNoSeats() const;
+    		void setNoSeats(short noSeats);
+    		const Position& getPosition() const;
+    		void setPosition(const Position &position);
+        };
+
     class OpenPayment 
     {
     private:
@@ -28,8 +51,8 @@ namespace DataTypes
         float amount;
         InvoiceStatus status;
     public:
-        OpenPayment();
-        ~OpenPayment();
+        OpenPayment(float amount);
+        virtual ~OpenPayment();
         const ull_t getId() const;
         const float getAmount() const;
         const InvoiceStatus getInvoiceStatus() const;
@@ -76,10 +99,11 @@ namespace DataTypes
     class Reservation
     {
     private:
-    	ull_t id, startTime, endTime, startMileage, endMileage;
+    	ull_t id, startTime, endTime, returnTime, startMileage, endMileage;
     	Position pickupPosition;
     	bool checkedIn, completed;
     	Subscription subscription;
+    	CarDetails car;
     public:
 		bool isCheckedIn() const;
 		void setCheckedIn(bool checkedIn);
@@ -97,27 +121,6 @@ namespace DataTypes
 		ull_t getStartTime() const;
 		Subscription getSubscription() const;
 	};
-
-    class CarDetails
-    {
-    private:
-    	ull_t id;
-    	short noDoors, noSeats;
-    	std::string brand, licensePlate, extras;
-    	Position position;
-    public:
-		const std::string& getBrand() const;
-		const std::string& getExtras() const;
-		void setExtras(const std::string &extras);
-		ull_t getId() const;
-		const std::string& getLicensePlate() const;
-		short getNoDoors() const;
-		void setNoDoors(short noDoors);
-		short getNoSeats() const;
-		void setNoSeats(short noSeats);
-		const Position& getPosition() const;
-		void setPosition(const Position &position);
-    };
 
     
 } // namespace DataTypes

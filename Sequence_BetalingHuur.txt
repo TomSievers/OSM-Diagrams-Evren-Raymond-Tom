@@ -11,14 +11,16 @@ participant "existingOpenPayment: OpenPayment" as eOP
 activate pSession
 pSession -> p: sendInvoice(reservation: Reservation): void
 activate p
-	p -> p: reservationToInvoice(reservation: Reservation): newOpenPayment: OpenPayment
+	p -> p: newOpenPayment = reservationToInvoice(reservation: Reservation): newOpenPayment: OpenPayment
 	activate p	
 		create pOP
-		p -> pOP: OpenPayment(amount: unsigned long long)
+		p -> pOP: <<create>> OpenPayment(amount: float)
+		
+	deactivate p
 		p -> Database: addOpenPayment(newOpenPayment: OpenPayment)
+		
 		activate Database
 		deactivate Database
-	deactivate p
 	p -> b: recieveInvoice(id: unsigned long long, bankAccountNumber: string, amount:float): void
 	activate b
 	deactivate b

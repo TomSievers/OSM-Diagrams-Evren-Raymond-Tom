@@ -3,6 +3,7 @@
 #include "DataTypes.hpp"
 #include "UserSession.hpp"
 #include <string>
+#include <memory>
 class Application
 {
 private:
@@ -21,7 +22,8 @@ public:
 class ClientApplication : public Application
 {
 private:
-    IClientSession session;
+    std::unique_ptr<IClientSession> session_ptr;
+    DataTypes::CarDetails currentCar;
     bool editUser(DataTypes::User& updatedUser);
     short mainThread();
     bool registerUser(std::string& name, std::string& address, std::string& email, std::string& bankAccountNumber);
@@ -36,7 +38,7 @@ public:
 class AdminApplication : public Application
 {
 private:
-    IAdminSession session;
+	std::unique_ptr<IAdminSession> session_ptr;
     bool editUser(DataTypes::User& updatedUser);
     short mainThread();
     bool creatAdmin(std::string& username, std::string& password);

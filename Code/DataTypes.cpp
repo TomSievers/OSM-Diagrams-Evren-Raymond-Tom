@@ -62,7 +62,7 @@ void Reservation::setStartMileage(ull_t startMileage)
 	this->startMileage = startMileage;
 }
 
-Subscription DataTypes::Reservation::getSubscription() const
+Subscription Reservation::getSubscription() const
 {
 	return subscription;
 }
@@ -127,37 +127,47 @@ void CarDetails::setPosition(const Position &position)
 	this->position = position;
 }
 
-bool DataTypes::User::isAccountActive() const
+const bool User::isAccountActive() const
 {
 	return accountActive;
 }
 
-void DataTypes::User::setAccountActive(bool accountActive = true)
+void User::setAccountActive(bool accountActive)
 {
 	this->accountActive = accountActive;
 }
 
-const Card& DataTypes::User::getCard() const
+const Card& User::getCard() const
 {
 	return card;
 }
 
-const std::vector<OpenPayment_ptr>& DataTypes::User::getOpenPayments() const
+const std::vector<OpenPayment_ptr>& User::getOpenPayments() const
 {
 	return openPayments;
 }
 
-const std::vector<Reservation_ptr>& DataTypes::User::getReservations() const
+const std::vector<Reservation_ptr>& User::getReservations() const
 {
 	return reservations;
 }
 
-Subscription DataTypes::User::getSubscription() const
+Subscription User::getSubscription() const
 {
 	return subscription;
 }
 
-void DataTypes::User::setSubscription(Subscription subscription)
+void User::setSubscription(Subscription subscription)
 {
 	this->subscription = subscription;
+}
+
+OpenPayment::~OpenPayment()
+{
+
+}
+
+OpenPayment::OpenPayment(float amount):amount(amount)
+{
+
 }

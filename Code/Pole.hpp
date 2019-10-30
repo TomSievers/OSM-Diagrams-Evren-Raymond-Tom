@@ -5,12 +5,13 @@
 #include "Card.hpp"
 #include "ICloseCommunication.hpp"
 #include <string>
+#include <memory>
 class Pole
 {
 private:
     ull_t id, blinkTimer = 300;
-    IPoleSession session;
-    ICloseCommunication communication;
+    std::unique_ptr<IPoleSession> session_ptr;
+    std::shared_ptr<ICloseCommunication> communication_ptr;
 public:
     Pole(/* args */);
     virtual ~Pole();

@@ -3,12 +3,13 @@
 #include "DataTypes.hpp"
 #include "CarSession.hpp"
 #include "GPS.hpp"
+#include <memory>
 class CarModule
 {
 private:
     ull_t blinkTimer = 300;
-    ICarSession session;
-    IPositional GPS;
+    std::unique_ptr<ICarSession> session;
+    std::unique_ptr<IPositional> GPS;
 public:
     CarModule();
     ~CarModule();

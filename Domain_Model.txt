@@ -50,6 +50,7 @@ Class Klantregister
 Class Autoregister
 Class GPS_Tracker
 Class Paal
+Class Parkeervak
 Class Betalingsachterstand{
 	bedrag
 }
@@ -71,7 +72,8 @@ Standplaats <|-- Parkeerplaats
 Auto "1" *-- "1" Module
 Module "1" *-- "1" GPS_Tracker
 Locatie "1" -- "0..*" GPS_Tracker: < houdt bij
-Parkeerplaats "1..*" -- "1" Paal: < staat bij
+Parkeerplaats "1..*" *-- "1..*" Parkeervak
+Parkeerplaats "1" -- "1" Paal: < staat bij
 Standplaats "1" *-- "1" Locatie
 Reservering <|-- Betalingsachterstand
 Autogegevens "1" --* "1" Auto
