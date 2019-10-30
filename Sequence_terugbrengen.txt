@@ -4,7 +4,6 @@ participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
 participant "card:Card" as Card
 participant "poleSession:IPoleSession" as IPoleSession
-participant "currentUser:User" as User
 participant "cardReservation:Reservation" as cardReservation
 participant "databaseCon:IDataBaseConnector" as Database
 participant "carReservation:Reservation" as Reservation
@@ -25,16 +24,12 @@ opt cardPresent == true
     Pole -> Card ** : <<create>>
     Pole -> Card : cardId = getId():unsigned long long
     Activate Card
-    Deactivate Card
-    Pole -> Card !! : <<delte>>
-    Pole -> IPoleSession : inUse = hasCarInUse(cardId : unsigned long long, cardId : unsigned long long) : boolean
+    Pole -> Card !! : <<delete>>
+    Pole -> IPoleSession : inUse = hasCarInUse(cardId : unsigned long long) : boolean
     Activate IPoleSession
-    IPoleSession -> Database : user = getUserFromCard(cardId:unsigned long long) : User
+    IPoleSession -> Database : cardReservation = getActiveReservationForCard(cardId : unsigned long long) : Reservation
     Activate Database
     Deactivate Database
-    IPoleSession -> User : reservation = getCurrentReservation() : Reservation
-    Activate User
-    Deactivate User
     IPoleSession -> cardReservation : checkedIn = isCheckedIn():boolean
     Activate cardReservation
     Deactivate cardReservation
@@ -42,6 +37,9 @@ opt cardPresent == true
     opt inUse == true
         Pole -> IPoleSession : onOriginal = carIsOnOriginalPosition(cardId: unsigned long long) : boolean
         Activate IPoleSession
+        IPoleSession -> Database : cardReservation = getActiveReservationForCard(cardId : unsigned long long) : Reservation
+        Activate Database
+        Deactivate Database
         IPoleSession -> cardReservation : carOnPickup = isCarOnPickupLocation() : boolean
         Activate cardReservation
         Deactivate cardReservation
@@ -49,6 +47,9 @@ opt cardPresent == true
         alt onOriginal == true
             Pole -> IPoleSession : checkOut(cardId : unsigned long long)
             Activate IPoleSession
+            IPoleSession -> Database : cardReservation = getActiveReservationForCard(cardId : unsigned long long) : Reservation
+            Activate Database
+            Deactivate Database
             IPoleSession -> cardReservation : setCompleted(isCompleted:boolean):void
             Activate cardReservation
             Deactivate cardReservation
@@ -69,7 +70,7 @@ end
 ===Turn off blinking car==
 
 loop
-    CarSession -> Database : reservation = getActiveReservationForCar(carId:unsigned long long) : Reservation
+    CarSession -> Database : cardReservation = getActiveReservationForCar(carId:unsigned long long) : Reservation
     Activate CarSession
     Activate Database
     Deactivate Database
