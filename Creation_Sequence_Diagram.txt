@@ -1,30 +1,117 @@
 @startuml
 
 participant "main" as main
-participant "pole:Pole" as Pole
+
+participant "pole:Pole" as pole
 participant "communication:ICloseCommunication" as communication
-participant "session:IPoleSession" as session
+participant "session:IPoleSession" as sessionPole
+participant "DBCon:IDataBaseConnector" as DBCon4
 participant "payment:IPayment" as payment
+participant "bank:IBank" as bank
 
-create Pole
-main -> Pole: <<Create>>
+participant "carModule:CarModule" as carModule
+participant "passIdentifycation:ICloseCommunication" as passIdentifycation
+participant "keyIdentifycation:ICloseCommunication" as keyIdentifycation
+participant "car:ICar" as car
+participant "positional:IPositional" as positional
+participant "session:ICarSession" as sessionCar
+participant "DBCon:IDataBaseConnector" as DBCon1
 
+participant "cApp:ClientApplication" as cApp
+participant "session:IClientSession" as sessionClient
+participant "DBCon:IDataBaseConnector" as DBCon2
+
+participant "aApp:ClientApplication" as aApp
+participant "session:IAdminSession" as sessionAdmin
+participant "DBCon:IDataBaseConnector" as DBCon3
+
+== From Pole ==
+
+create pole
+main -> pole: <<Create>>
 
 create communication
-Pole -> communication: <<Create>>
+pole -> communication: <<Create>>
 
-create session
-Pole -> session: <<Create>>
+create sessionPole
+pole -> sessionPole: <<Create>>
+
+create DBCon4
+sessionPole -> DBCon4: <<Create>>
 
 create payment
-session -> payment: <<Create>>
+sessionPole -> payment: <<Create>>(DBCon)
+
+create bank
+payment -> bank: <<Create>>
 
 loop till termination
-	main -> Pole: mainThread()
-	activate Pole
-	deactivate Pole
+	main -> pole: mainThread()
+	activate pole
+	deactivate pole
 end
 
+== From CarModule ==
 
+create carModule
+main -> carModule: <<Create>>
+
+create passIdentifycation
+carModule -> passIdentifycation: <<Create>>
+
+create keyIdentifycation
+carModule -> keyIdentifycation: <<Create>>
+
+
+create car
+carModule -> car: <<Create>>
+
+create positional
+carModule -> positional: <<Create>>
+
+create sessionCar
+carModule -> sessionCar: <<Create>>
+
+create DBCon1
+sessionCar -> DBCon1: <<Create>>
+
+loop till termination
+	main -> carModule: mainThread()
+	activate carModule
+	deactivate carModule
+end
+
+== From ClientApplication ==
+
+create cApp
+main -> cApp: <<Create>>
+
+create sessionClient
+cApp -> sessionClient: <<Create>>
+
+create DBCon2
+sessionClient -> DBCon2: <<Create>>
+
+loop till termination
+	main -> cApp: mainThread()
+	activate cApp
+	deactivate cApp
+end
+
+== From AdminApplication ==
+create aApp
+main -> aApp: <<Create>>
+
+create sessionAdmin
+aApp -> sessionAdmin: <<Create>>
+
+create DBCon3
+sessionClient -> DBCon3: <<Create>>
+
+loop till termination
+	main -> aApp: mainThread()
+	activate aApp
+	deactivate aApp
+end
 
 @enduml
