@@ -11,13 +11,13 @@ Interface IClientSession
 }
 Interface IPoleSession
 {
-	+hasReservation(cardId: unsigned long long): boolean
+	+hasActiveReservation(cardId: unsigned long long): boolean
 	+checkIn(cardId: unsigned long long) : void
 	+checkOut(cardId: unsigned long long) : void
 	+hasCarInUse(cardId:unsigned long long) : boolean
 	+carIsOnOriginalPosition(cardId:unsigned long long) : boolean
 	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
-	+hasOpenPayment(userId: unsigned long long):boolean
+	+hasOpenPayment(cardId: unsigned long long):boolean
 }
 Interface ICloseCommunication
 {
@@ -130,10 +130,11 @@ Interface IDataBaseConnector
 	+getReservation(id: unsigned long long):Reservation
 	+getReservation():Reservation[0..*]
 	+getFirstReservationForCard(cardId: unsigned long long): Reservation
-	+getActiveReservationForCar(carId:unsigned long long):Reservation
-	+addReservation(userId:unsigned long long,\n carId:unsigned long long,\n startDate:unsigned long long,\n endDate:unsigned long long):void
-	+editReservation():void
-	+deleteReservation():void
+	+getActiveReservationForCard(cardId: unsigned long long) : Reservation
+	+getActiveReservationForCar(carId:unsigned long long): Reservation
+	+addReservationForUser(newReservation:Reservation , userId:unsigned long long):void
+	+editReservation(updatedReservation:Reservation):void
+	+deleteReservation(id:unsigned long long):void
 	+getCar(id: unsigned long long):CarDetails
 	+getCar():Car[0..*]
 	+addCar():void
@@ -141,9 +142,9 @@ Interface IDataBaseConnector
 	+deleteCar():void
 	+getOpenPayment(id: unsigned long long):OpenPayment
 	+getOpenPayment():OpenPayment[0..*]
-	+addOpenPayment():void
-	+editOpenPayment():void
-	+deleteOpenPayment():void
+	+addOpenPayment(newOpenPayment:OpenPayment):void
+	+editOpenPayment(updatedOpenPayment:Payment):void
+	+deleteOpenPayment(id: unsigned long long):void
 	+userHasOpenPayments(userId: unsigned long long): boolean
 }
 
@@ -222,8 +223,6 @@ Package DataTypes
 		+getCarLocation():Location
 		+isCarOnPickupLocation():boolean
 	}
-
-
 
 	Class User
 	{

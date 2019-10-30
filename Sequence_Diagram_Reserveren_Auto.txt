@@ -21,7 +21,7 @@ alt hasOpenPayment == false
 	deactivate UserSession
 	create Reservation
 	ClientApp -> Reservation: <<create>>
-		ClientApp -> IDataBaseConnector: addReservation(newReservation: Reservation) : void
+		ClientApp -> IDataBaseConnector: addReservationForUser(newReservation: Reservation, userId: unsigned long long) : void
 		activate IDataBaseConnector
 		deactivate IDataBaseConnector
 		ClientApp -> Client: displayMessage(message: string) : void
