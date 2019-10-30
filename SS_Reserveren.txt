@@ -3,9 +3,10 @@
 actor Actor as mainActor
 participant System
 
-mainActor -> System: chooseCar(CarDetails)
-System -> mainActor: showReservationPage()
-mainActor -> System: enterReservationDetails(startTime, endTime)
+mainActor -> System : chooseCar(CarDetails)
+mainActor <-- System : showReservationPage()
+mainActor -> System : enterReservationDetails(startTime, endTime)
+mainActor <-- System : displayMessage(message) 
 
 
 @enduml
