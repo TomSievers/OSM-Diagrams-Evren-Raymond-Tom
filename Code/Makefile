@@ -1,25 +1,25 @@
-all: db_con close_com gps payment admin client pole car
+all: payment db_con close_com gps admin client pole car
 
 db_con:
-	cd DatabaseConnector && make
+	cd DatabaseConnector && rm -rf *.o && make
 
 close_com:
-	cd CloseCommunication && make
+	cd CloseCommunication && rm -rf *.o && make
 
 gps:
-	cd CloseCommunication && make 
+	cd CloseCommunication && rm -rf *.o && make 
 
 payment:
-	cd Payment && make
+	cd Payment && rm -rf *.o && make
 
 admin:
-	cd AdminApplication && make
+	cd AdminApplication && rm -rf *.o && make
 
 client:
-	cd ClientApplication && make
+	cd ClientApplication && rm -rf *.o && make
 
 pole:
-	cd Pole && make
+	cd Pole && rm -rf *.o && make
 
 car:
-	cd CarModule && make
+	cd CarModule && rm -rf *.o && make

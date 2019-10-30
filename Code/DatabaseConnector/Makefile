@@ -4,7 +4,7 @@ all: ../dll/CarLib.dll ../dll/PoleLib.dll ../dll/AdminLib.dll ../dll/ClientLib.d
 	g++ -shared -o ../dll/CarLib.dll CarSession.o Session.o IDataBaseConnector.o
 
 ../dll/PoleLib.dll : PoleSession.o Session.o IDataBaseConnector.o
-	g++ -shared -o ../dll/PoleLib.dll PoleSession.o Session.o IDataBaseConnector.o -L ../Payment -lPayment
+	g++ -shared -o ../dll/PoleLib.dll PoleSession.o Session.o IDataBaseConnector.o -L ../dll/ -lPayment
 
 ../dll/AdminLib.dll : UserSession.o Session.o IDataBaseConnector.o
 	g++ -shared -o ../dll/AdminLib.dll UserSession.o Session.o IDataBaseConnector.o 
