@@ -1,5 +1,7 @@
 @startuml
 
+skinparam classAttributeIconSize 0
+
 Interface IClientSession
 {
 	+getUser(userId: unsigned long long): User
@@ -198,6 +200,7 @@ Package DataTypes
 		-id: unsigned long long
 		-startTime: unsigned long long
 		-endTime: unsigned long long
+		-returnTime: unsigned long long
 		-checkedIn: boolean
 		-startMileage: unsigned long long
 		-endMileage: unsigned long long
@@ -231,6 +234,7 @@ Package DataTypes
 		-accountActive: boolean
 		-bankAccountNumber: string
 		-email: string
+		-reservations: Reservation[0..*]
 		+getId():unsigned long long
 		+getName():string
 		+setName(name:string):void
@@ -254,7 +258,6 @@ Package DataTypes
 	{
 		-id: unsigned long long
 		-amount: float
-		-status: InvoiceStatus
 		+getId():unsigned long long
 		+getAmount():float
 		+getStatus():InvoiceStatus
@@ -322,35 +325,35 @@ Payment --> "1" IBank
 ICarSession "1" <- CarModule
 CarModule -> "1" IPositional
 ICar "1" <-- CarModule
-IClientSession "1" <- ClientApplication
-IAdminSession "1" <- AdminApplication
+IClientSession "1" <- "1" ClientApplication: session
+IAdminSession "1" <- "1"  AdminApplication: session
 ClientApplication -|> Application
 Application <|-- AdminApplication
 ICloseCommunication "2" <- CarModule
 ICar <|. Car
 IPositional .> Position
-CarDetails "1" <- Reservation
+CarDetails "1" <- "0..*" Reservation : car
 Subscription <-- Reservation
-OpenPayment "0..*" -- "1" User
-CarStatus "1" <- CarDetails
+OpenPayment "0..*" -- "1" User: openPayments
+CarStatus "1" <- "0..*" CarDetails: status
 IDataBaseConnector "1" <- Session
 AdminApplication -[hidden]> ICarSession
 IPoleSession -[hidden]> IAdminSession
 Application -[hidden]> ICar
 Session "0..*" <-- SessionHandler
-PoleSession ---> "1" IPayment
+PoleSession "1..*" ---> "1" IPayment: payment
 IDataBaseConnector ..> DataTypes_
 DataTypes <.. IClientSession
 DataTypes <.. Application
 IPayment .> DataTypes_
 IDataBaseConnector <.. IPayment
-OpenPayment -> "1" InvoiceStatus
+OpenPayment "0..*" -> "1" InvoiceStatus: status
 Card "1" <.. Pole
 User --> "1" Card
-Reservation -> "1" Position
+Reservation -> "1" Position: pickupPosition
 User "1" - "0..*" Reservation
-CarDetails -> "1" Position
-DataTypes <-- ICarSession
-Subscription <-- User
+CarDetails "1" -> "1" Position: position
+DataTypes <.. ICarSession
+Subscription <-- User :subscription
 
 @enduml
