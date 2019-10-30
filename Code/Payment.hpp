@@ -8,6 +8,8 @@
 #ifndef PAYMENT_HPP_
 #define PAYMENT_HPP_
 #include "DataTypes.hpp"
+#include "Bank.hpp"
+#include <memory>
 
 class IPayment
 {
@@ -18,20 +20,11 @@ public:
 	virtual DataTypes::OpenPayment reservationToInvoice(DataTypes::Reservation& reservation) = 0;
 };
 
-class IBank
-{
-public:
-	IBank();
-	virtual ~IBank();
-	virtual void recieveInvoice(ull_t id, std::string bankAccountNumber, float amount) = 0;
-	virtual DataTypes::InvoiceStatus checkInvoiceStatus(ull_t id) = 0;
-};
-
 class Payment : public IPayment
 {
 private:
 	std::vector<DataTypes::OpenPayment> handlingPayments;
-	IBank bank;
+	static std::unique_ptr<IBank> bank;
 public:
 	Payment();
 	virtual ~Payment();
