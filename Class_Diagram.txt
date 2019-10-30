@@ -9,13 +9,13 @@ Interface IClientSession
 }
 Interface IPoleSession
 {
-	+hasReservation(cardId: unsigned long long): boolean
+	+hasActiveReservation(cardId: unsigned long long): boolean
 	+checkIn(cardId: unsigned long long) : void
 	+checkOut(cardId: unsigned long long) : void
 	+hasCarInUse(cardId:unsigned long long) : boolean
 	+carIsOnOriginalPosition(cardId:unsigned long long) : boolean
 	+poleBlinkSetup(blinkSignalOn: void(void), blinkSignalOff: void(void)): void
-	+hasOpenPayment(userId: unsigned long long):boolean
+	+hasOpenPayment(cardId: unsigned long long):boolean
 }
 Interface ICloseCommunication
 {

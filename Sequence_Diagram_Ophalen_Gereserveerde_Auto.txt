@@ -5,7 +5,7 @@ participant "RFID:RFID" as RFID
 participant "pole:Pole" as Pole
 participant "card:Card" as Card
 participant "IPoleSession:IPoleSession" as PoleSession
-participant "IDataBaseConnector:IDataBaseConnector" as IDataBaseConnector
+participant "Database:IDataBaseConnector" as Database
 participant "user:User" as User
 participant "reservation:Reservation" as Reservation
 participant "carDetails:CarDetails" as CarDetails
@@ -25,53 +25,62 @@ opt cardPresent == true
 	Pole -> Card: cardId = getId()
 	activate Card
 	Pole -> Card !! : <<delete>>
-	Pole -> PoleSession: openPayment = hasOpenPayment(cardId) : boolean
-	activate PoleSession
-	PoleSession -> IDataBaseConnector : user = getUserFromCard(cardId : unsigned long long) : User
-	Activate IDataBaseConnector
-	deactivate IDataBaseConnector
-	PoleSession -> User : userId = getId() : unsigned long long
-	activate User
-	deactivate User
-	PoleSession -> IDataBaseConnector : hasOpenPayments = userHasOpenPayments(userId : unsigned long long) : boolean
-	Activate IDataBaseConnector
-	deactivate IDataBaseConnector
+	Pole -> PoleSession : inUse = hasCarInUse(cardId : unsigned long long) : boolean
+    Activate PoleSession
+    PoleSession -> Database : reservation = getActiveReservationForCard(cardId : unsigned long long) : Reservation
+    Activate Database
+    Deactivate Database
+	PoleSession -> Reservation : checkedIn = isCheckedIn():boolean
+    Activate Reservation
+    Deactivate Reservation
 	deactivate PoleSession
-	alt openPayment == false
-		Pole -> PoleSession: reserved = hasReservation(cardId : unsigned long long) : boolean
+	opt inUse == false
+		Pole -> PoleSession: openPayment = hasOpenPayment(cardId:unsigned long long) : boolean
 		activate PoleSession
-		PoleSession -> IDataBaseConnector: reservation = getFirstReservationForCard(cardId : unsigned long long) : Reservation
-		activate IDataBaseConnector
-		deactivate IDataBaseConnector
-		PoleSession -> Reservation : checkedIn = isCheckedIn() : boolean
-		activate Reservation
-		deactivate Reservation
+		PoleSession -> Database : user = getUserFromCard(cardId : unsigned long long) : User
+		Activate Database
+		deactivate Database
+		PoleSession -> User : userId = getId() : unsigned long long
+		activate User
+		deactivate User
+		PoleSession -> Database : hasOpenPayments = userHasOpenPayments(userId : unsigned long long) : boolean
+		Activate Database
+		deactivate Database
 		deactivate PoleSession
-		alt reserved == true
-			Pole -> PoleSession : checkIn(cardId:unsigned long long) : void
+		alt openPayment == false
+			Pole -> PoleSession: reserved = hasReservation(cardId : unsigned long long) : boolean
 			activate PoleSession
-			PoleSession -> IDataBaseConnector: reservation = getFirstReservationForCard(cardId : unsigned long long) : Reservation
-			activate IDataBaseConnector
-			deactivate IDataBaseConnector
-			PoleSession -> Reservation : setCheckedIn(true) : void
+			PoleSession -> Database: reservation = getFirstReservationForCard(cardId : unsigned long long) : Reservation
+			activate Database
+			deactivate Database
+			PoleSession -> Reservation : checkedIn = isCheckedIn() : boolean
 			activate Reservation
 			deactivate Reservation
-			PoleSession -> Reservation : setPickupLocation() : void
-			activate Reservation
-			Reservation -> CarDetails : pickupLocation = getPosition() : Position
-			activate CarDetails
-			deactivate CarDetails
-			deactivate Reservation
-			PoleSession -> IDataBaseConnector : editReservation(reservation : Reservation) : void 
-			activate IDataBaseConnector
-			deactivate IDataBaseConnector
 			deactivate PoleSession
-			Pole --> Client : displayMessage(message : string) : void
+			alt reserved == true
+				Pole -> PoleSession : checkIn(cardId:unsigned long long) : void
+				activate PoleSession
+				PoleSession -> Database: reservation = getFirstReservationForCard(cardId : unsigned long long) : Reservation
+				activate Database
+				deactivate Database
+				PoleSession -> Reservation : setCheckedIn(true) : void
+				activate Reservation
+				deactivate Reservation
+				PoleSession -> Reservation : setPickupLocation() : void
+				activate Reservation
+				Reservation -> CarDetails : pickupLocation = getPosition() : Position
+				activate CarDetails
+				deactivate CarDetails
+				deactivate Reservation
+				PoleSession -> Database : editReservation(reservation : Reservation) : void 
+				activate Database
+				deactivate Database
+				deactivate PoleSession
+				Pole --> Client : displayMessage(message : string) : void
+			end
+		else 
+			Pole --> Client: displayMessage(message : string) : void
 		end
-	else 
-		Pole --> Client: displayMessage(message : string) : void
 	end
-
-	
 end
 @enduml
