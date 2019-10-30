@@ -4,6 +4,7 @@ participant "main" as main
 participant "pole:Pole" as Pole
 participant "communication:ICloseCommunication" as communication
 participant "session:IPoleSession" as session
+participant "payment:IPayment" as payment
 
 create Pole
 main -> Pole: <<Create>>
@@ -14,6 +15,10 @@ Pole -> communication: <<Create>>
 
 create session
 Pole -> session: <<Create>>
+
+create payment
+session -> payment: <<Create>>
+
 loop till termination
 	main -> Pole: mainThread()
 	activate Pole
