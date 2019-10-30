@@ -51,7 +51,7 @@ namespace DataTypes
         float amount;
         InvoiceStatus status;
     public:
-        OpenPayment();
+        OpenPayment(float amount);
         virtual ~OpenPayment();
         const ull_t getId() const;
         const float getAmount() const;

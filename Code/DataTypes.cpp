@@ -167,7 +167,7 @@ OpenPayment::~OpenPayment()
 
 }
 
-OpenPayment::OpenPayment()
+OpenPayment::OpenPayment(float amount):amount(amount)
 {
 
 }

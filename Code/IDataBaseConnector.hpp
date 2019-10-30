@@ -38,4 +38,33 @@ public:
 	virtual void deleteOpenPayment(DataTypes::OpenPayment& openPayment) = 0;
 };
 
+class DataBaseConnector: public IDataBaseConnector
+{
+public:
+	DataBaseConnector();
+	virtual ~DataBaseConnector();
+	DataTypes::User& getUser(ull_t id);
+	std::vector<std::shared_ptr<DataTypes::User>> getUser();
+	DataTypes::User& getUserFromCard(ull_t cardId);
+	void addUser(DataTypes::User& user);
+	void editUser(DataTypes::User& user);
+	void deleteUser(DataTypes::User& user);
+	DataTypes::Reservation& getReservation(ull_t id);
+	std::vector<std::shared_ptr<DataTypes::Reservation>> getReservation();
+	DataTypes::Reservation& getActiveReservationForCar(ull_t carId);
+	void addReservation(DataTypes::Reservation& reservation);
+	void editReservation(DataTypes::Reservation& reservation);
+	void deleteReservation(DataTypes::Reservation& reservation);
+	DataTypes::CarDetails& getCar(ull_t id);
+	std::vector<std::shared_ptr<DataTypes::CarDetails>> getCar();
+	void addCar(DataTypes::CarDetails& car);
+	void editCar(DataTypes::CarDetails& car);
+	void deleteCar(DataTypes::CarDetails& car);
+	DataTypes::OpenPayment& getOpenPayment(ull_t id);
+	std::vector<std::shared_ptr<DataTypes::OpenPayment>> getOpenPayment();
+	void addOpenPayment(DataTypes::OpenPayment& openPayment);
+	void editOpenPayment(DataTypes::OpenPayment& openPayment);
+	void deleteOpenPayment(DataTypes::OpenPayment& openPayment);
+};
+
 #endif /* IDATABASECONNECTOR_HPP_ */

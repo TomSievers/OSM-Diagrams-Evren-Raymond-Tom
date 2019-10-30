@@ -18,3 +18,14 @@ IDataBaseConnector::~IDataBaseConnector()
 	// TODO Auto-generated destructor stub
 }
 
+DataBaseConnector::DataBaseConnector(): IDataBaseConnector()
+{
+	// TODO Auto-generated constructor stub
+
+}
+
+DataBaseConnector::~DataBaseConnector()
+{
+	// TODO Auto-generated destructor stub
+}
+

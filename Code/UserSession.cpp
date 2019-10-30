@@ -7,7 +7,19 @@ UserSession::~UserSession()
 {
 }
 
-IAdminSession::IAdminSession()
+IAdminSession::IAdminSession(): IClientSession()
+{
+
+}
+IAdminSession::~IAdminSession()
+{
+
+}
+IClientSession::IClientSession()
+{
+
+}
+IClientSession::~IClientSession()
 {
 
 }

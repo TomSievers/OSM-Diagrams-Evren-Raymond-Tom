@@ -9,6 +9,7 @@
 #define PAYMENT_HPP_
 #include "DataTypes.hpp"
 #include "Bank.hpp"
+#include "IDataBaseConnector.hpp"
 #include <memory>
 
 class IPayment
@@ -25,6 +26,7 @@ class Payment : public IPayment
 private:
 	std::vector<DataTypes::OpenPayment> handlingPayments;
 	static std::unique_ptr<IBank> bank;
+	static std::shared_ptr<IDataBaseConnector> DBCon;
 public:
 	Payment();
 	virtual ~Payment();

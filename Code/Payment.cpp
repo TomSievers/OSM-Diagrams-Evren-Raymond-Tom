@@ -9,6 +9,7 @@
 #include "Bank.hpp"
 
 /*static*/ std::unique_ptr<IBank> Payment::bank = std::make_unique<Bank>();
+/*static*/ std::shared_ptr<IDataBaseConnector> Payment::DBCon = std::make_shared<DataBaseConnector>();
 
 Payment::Payment(): IPayment()
 {
@@ -32,3 +33,16 @@ IPayment::~IPayment()
 	// TODO Auto-generated destructor stub
 }
 
+void Payment::sendInvoice(DataTypes::Reservation& reservation)
+{
+}
+
+DataTypes::OpenPayment Payment::reservationToInvoice(
+		DataTypes::Reservation& reservation)
+{
+
+}
+
+short Payment::mainThread()
+{
+}
