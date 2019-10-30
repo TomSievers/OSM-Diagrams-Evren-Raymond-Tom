@@ -1,0 +1,23 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+Abstract Application
+{
+	#login(email: string, password: string): short
+	{abstract}#editUser(updatedUser: User): boolean
+	{abstract}+mainThread(): short
+}
+Class ClientApplication
+{
+	-currentCar : CarDetails
+	-chooseCar(licensePlate : string) : CarDetails
+	-registerUser(name: string, address: string, email: string, bankAccountNumber: string): boolean
+	-setSubscription(newSub: Subscription): boolean
+	-makeReservation(startTime: unsigned long long, endTime: unsigned long long): void
+	-displayMessage(message: string): void
+	
+}
+ClientApplication -|> Application
+
+@enduml

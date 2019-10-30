@@ -1,0 +1,13 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+Interface ICloseCommunication
+{
+	+readSignature(): string
+	+isCardPresent(): boolean
+}
+
+Class RFID
+ICloseCommunication <|.. RFID
+@enduml

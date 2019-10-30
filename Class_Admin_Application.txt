@@ -1,0 +1,19 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+Abstract Application
+{
+	#login(email: string, password: string): short
+	{abstract}#editUser(updatedUser: User): boolean
+	{abstract}+mainThread(): short
+}
+
+Class AdminApplication
+{
+	-createAdmin(email:string, password: string): boolean
+	-editCar(updatedCar: CarDetails): boolean
+}
+
+AdminApplication -|> Application
+@enduml

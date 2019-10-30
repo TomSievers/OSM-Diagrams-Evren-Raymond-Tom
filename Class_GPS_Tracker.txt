@@ -1,0 +1,27 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+
+Interface IPositional
+{
+	+getPosition(): Position
+}
+
+Class GPS
+{
+	-longitude: double
+	-latitude: double
+	-altitude: double
+}
+Class Position <<(S, yellow) struct>>
+{
+	+longitude: double
+	+latitude: double
+	+altitude: double
+}
+
+IPositional <|.. GPS
+IPositional .> Position
+
+@enduml

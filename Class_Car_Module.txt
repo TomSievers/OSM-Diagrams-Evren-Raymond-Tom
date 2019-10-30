@@ -1,0 +1,13 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+
+Class CarModule
+{
+	-blinkTimer: unsigned long long
+	+mainThread(): short
+	+blinkSignalOn(): void
+	+blinkSignalOff(): void
+}
+@enduml
