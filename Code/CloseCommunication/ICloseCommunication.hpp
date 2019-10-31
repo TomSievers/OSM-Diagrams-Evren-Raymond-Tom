@@ -9,7 +9,7 @@
 #define ICLOSECOMMUNICATION_HPP_
 #include <string>
 
-class ICloseCommunication
+class __declspec(dllexport) ICloseCommunication
 {
 public:
 	ICloseCommunication();
@@ -21,8 +21,8 @@ public:
 class RFID : public ICloseCommunication
 {
 public:
-	RFID();
-	virtual ~RFID();
+	__declspec(dllexport) RFID();
+	virtual __declspec(dllexport) ~RFID();
 	bool isObjectPresent();
 	std::string& readSignature();
 };

@@ -1,11 +1,11 @@
 #ifndef POLESESSION_HPP
 #define POLESESSION_HPP
-#include "DataTypes.hpp"
+#include "../DataTypes.hpp"
 #include "Session.hpp"
-#include "Payment.hpp"
+#include "../Payment/Payment.hpp"
 #include <memory>
 
-class IPoleSession
+class __declspec(dllexport) IPoleSession
 {
 public:
     IPoleSession();
@@ -24,8 +24,8 @@ private:
     ull_t poleId;
     static std::shared_ptr<IPayment> payment;
 public:
-    PoleSession(/* args */);
-    virtual ~PoleSession();
+    __declspec(dllexport) PoleSession(/* args */);
+    virtual __declspec(dllexport) ~PoleSession();
     ull_t getPoleId();
     void (*blinkSignalOn)(void);
     void (*blinkSignalOff)(void);

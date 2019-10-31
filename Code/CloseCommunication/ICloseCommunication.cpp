@@ -18,3 +18,18 @@ ICloseCommunication::~ICloseCommunication()
 	// TODO Auto-generated destructor stub
 }
 
+RFID::RFID() : ICloseCommunication()
+{
+}
+
+RFID::~RFID()
+{
+}
+
+bool RFID::isObjectPresent()
+{
+}
+
+std::string& RFID::readSignature()
+{
+}

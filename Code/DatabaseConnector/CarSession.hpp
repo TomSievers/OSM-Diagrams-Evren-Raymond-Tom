@@ -1,9 +1,9 @@
 #ifndef CARSESSION_HPP
 #define CARSESSION_HPP
-#include "Position.hpp"
-#include "DataTypes.hpp"
+#include "../Position.hpp"
+#include "../DataTypes.hpp"
 #include "Session.hpp"
-class ICarSession
+class __declspec(dllexport) ICarSession
 {
     public:
 	ICarSession();
@@ -19,8 +19,8 @@ class CarSession : public ICarSession, public Session
 private:
     ull_t carId;
 public:
-    CarSession(/* args */);
-    virtual ~CarSession();
+    __declspec(dllexport) CarSession(/* args */);
+    virtual __declspec(dllexport) ~CarSession();
     ull_t getCarId();
     void (*blinkSignalOn)(void);
     void (*blinkSignalOff)(void);

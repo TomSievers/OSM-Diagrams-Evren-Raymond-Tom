@@ -7,7 +7,7 @@
 
 #ifndef IDATABASECONNECTOR_HPP_
 #define IDATABASECONNECTOR_HPP_
-#include "DataTypes.hpp"
+#include "../DataTypes.hpp"
 
 class IDataBaseConnector
 {

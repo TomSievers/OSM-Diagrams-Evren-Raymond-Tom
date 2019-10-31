@@ -1,6 +1,6 @@
 #ifndef SESSION_HPP
 #define SESSION_HPP
-#include "DataTypes.hpp"
+#include "../DataTypes.hpp"
 
 class Session
 {

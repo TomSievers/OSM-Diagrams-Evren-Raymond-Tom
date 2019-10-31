@@ -3,3 +3,5 @@
 *.jpg
 *.jar
 *.xmi
+*.o
+*.dll

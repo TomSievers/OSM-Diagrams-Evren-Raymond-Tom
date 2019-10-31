@@ -1,9 +1,9 @@
 #ifndef POLE_HPP
 #define POLE_HPP
-#include "DataTypes.hpp"
-#include "PoleSession.hpp"
-#include "Card.hpp"
-#include "ICloseCommunication.hpp"
+#include "../DataTypes.hpp"
+#include "../DatabaseConnector/PoleSession.hpp"
+#include "../Card.hpp"
+#include "../CloseCommunication/ICloseCommunication.hpp"
 #include <string>
 #include <memory>
 class Pole

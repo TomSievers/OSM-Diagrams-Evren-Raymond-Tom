@@ -29,3 +29,11 @@ IBank::~IBank()
 	// TODO Auto-generated destructor stub
 }
 
+void Bank::recieveInvoice(ull_t id, std::string bankAccountNumber, float amount)
+{
+}
+
+DataTypes::InvoiceStatus Bank::checkInvoiceStatus(ull_t id)
+{
+}
+

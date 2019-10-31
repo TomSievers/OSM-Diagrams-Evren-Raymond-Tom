@@ -7,12 +7,12 @@
 
 #ifndef PAYMENT_HPP_
 #define PAYMENT_HPP_
-#include "DataTypes.hpp"
+#include "../DataTypes.hpp"
 #include "Bank.hpp"
-#include "IDataBaseConnector.hpp"
+#include "../DatabaseConnector/IDataBaseConnector.hpp"
 #include <memory>
 
-class IPayment
+class __declspec(dllexport) IPayment
 {
 public:
 	IPayment();
@@ -28,8 +28,8 @@ private:
 	static std::unique_ptr<IBank> bank;
 	static std::shared_ptr<IDataBaseConnector> DBCon;
 public:
-	Payment();
-	virtual ~Payment();
+	__declspec(dllexport) Payment();
+	virtual __declspec(dllexport) ~Payment();
 	void sendInvoice(DataTypes::Reservation& reservation);
 	DataTypes::OpenPayment reservationToInvoice(DataTypes::Reservation& reservation);
 	short mainThread();

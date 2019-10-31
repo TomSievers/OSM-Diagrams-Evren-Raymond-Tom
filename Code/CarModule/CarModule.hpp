@@ -1,8 +1,8 @@
 #ifndef CARMODULE_HPP
 #define CARMODULE_HPP
-#include "DataTypes.hpp"
-#include "CarSession.hpp"
-#include "GPS.hpp"
+#include "../DataTypes.hpp"
+#include "../DatabaseConnector/CarSession.hpp"
+#include "../GPS_Tracker/GPS.hpp"
 #include <memory>
 class CarModule
 {
