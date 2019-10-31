@@ -1,0 +1,24 @@
+@startuml
+
+participant "main" as main
+
+participant "cApp:ClientApplication" as cApp
+participant "session:IClientSession" as sessionClient
+participant "DBCon:IDataBaseConnector" as DBCon2
+
+create cApp
+main -> cApp: <<Create>>
+
+create sessionClient
+cApp -> sessionClient: <<Create>>
+
+create DBCon2
+sessionClient -> DBCon2: <<Create>>
+
+loop till termination
+	main -> cApp: mainThread()
+	activate cApp
+	deactivate cApp
+end
+
+@enduml

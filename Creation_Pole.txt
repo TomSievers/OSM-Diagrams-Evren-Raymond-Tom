@@ -1,0 +1,36 @@
+@startuml
+
+participant "main" as main
+
+participant "pole:Pole" as pole
+participant "communication:ICloseCommunication" as communication
+participant "session:IPoleSession" as sessionPole
+participant "DBCon:IDataBaseConnector" as DBCon4
+participant "payment:IPayment" as payment
+participant "bank:IBank" as bank
+
+create pole
+main -> pole: <<Create>>
+
+create communication
+pole -> communication: <<Create>>
+
+create sessionPole
+pole -> sessionPole: <<Create>>
+
+create DBCon4
+sessionPole -> DBCon4: <<Create>>
+
+create payment
+sessionPole -> payment: <<Create>>(DBCon)
+
+create bank
+payment -> bank: <<Create>>
+
+loop till termination
+	main -> pole: mainThread()
+	activate pole
+	deactivate pole
+end
+
+@enduml

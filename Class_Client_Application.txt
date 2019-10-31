@@ -18,6 +18,11 @@ Class ClientApplication
 	-displayMessage(message: string): void
 	
 }
+Package Datatypes
+{
+}
+
 ClientApplication -|> Application
+Application .> Datatypes
 
 @enduml

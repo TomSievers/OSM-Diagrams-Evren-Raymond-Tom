@@ -15,5 +15,10 @@ Class AdminApplication
 	-editCar(updatedCar: CarDetails): boolean
 }
 
+Package DataTypes
+{
+}
+
 AdminApplication -|> Application
+Application .> DataTypes
 @enduml

@@ -3,41 +3,45 @@
 node Pole {
 	component Check_In_Point
 	component Close_Communication
+	component Database_Connector as Database_ConnectorP
+	component Payment
 }
 
 node CarModule {
 	component Car_Module
 	component "Close_Communication " as Close_Communication_
+	component Database_Connector as Database_ConnectorC
 	component GPS_Tracker
 }
 
 node Workstation {
 	component Client_Application
 	component Admin_Application
+	component Database_Connector  as Database_ConnectorU
 }
 
 node Server {
-	component Payment
-	component Database_Connector
 	artifact Database
 }
 
 artifact Car
 
-Check_In_Point .> Database_Connector 
-Database_Connector <... Car_Module
-Admin_Application ..> Database_Connector
-Client_Application ..> Database_Connector
-Workstation --- Server: TCP/IP
+Check_In_Point .> Database_ConnectorP 
+Database_ConnectorC <.. Car_Module
+Admin_Application ..> Database_ConnectorU
+Client_Application ..> Database_ConnectorU
+Workstation -- Server: TCP/IP
 Server -- Pole: TCP/IP
 Server -- CarModule: TCP/IP
-Database_Connector .> Database
-Database_Connector ..> Payment
+Database_ConnectorU ..> Database
+Database_ConnectorP .> Database
+Database <. Database_ConnectorC
+Database_ConnectorP <..> Payment
 Car_Module .> GPS_Tracker
 Check_In_Point ..> Close_Communication
 Car_Module ..> Close_Communication_
 
-Car <.. CarModule: CAN-Bus
+CarModule ..> Car: CAN-Bus
 
 @enduml
 

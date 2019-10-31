@@ -1,0 +1,41 @@
+@startuml
+
+participant "main" as main
+
+participant "carModule:CarModule" as carModule
+participant "passIdentifycation:ICloseCommunication" as passIdentifycation
+participant "keyIdentifycation:ICloseCommunication" as keyIdentifycation
+participant "car:ICar" as car
+participant "positional:IPositional" as positional
+participant "session:ICarSession" as sessionCar
+participant "DBCon:IDataBaseConnector" as DBCon1
+
+create carModule
+main -> carModule: <<Create>>
+
+create passIdentifycation
+carModule -> passIdentifycation: <<Create>>
+
+create keyIdentifycation
+carModule -> keyIdentifycation: <<Create>>
+
+
+create car
+carModule -> car: <<Create>>
+
+create positional
+carModule -> positional: <<Create>>
+
+create sessionCar
+carModule -> sessionCar: <<Create>>
+
+create DBCon1
+sessionCar -> DBCon1: <<Create>>
+
+loop till termination
+	main -> carModule: mainThread()
+	activate carModule
+	deactivate carModule
+end
+
+@enduml

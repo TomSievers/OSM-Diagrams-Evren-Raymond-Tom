@@ -5,7 +5,7 @@ component Client_Application
 component Admin_Application
 component Car_Module
 component Check_In_Point
-component GPS_Tracker
+component Position_Tracker
 component Close_Communication
 component Payment
 interface ICarDB as Car_DB_Interface
@@ -26,7 +26,7 @@ Check_In_DB_Interface )- Check_In_Point
 Car_DB_Interface )- Car_Module
 Admin_DB_Interface )-- Admin_Application
 Client_Application -( Client_DB_Interface
-Positional_Interface - GPS_Tracker
+Positional_Interface - Position_Tracker
 Car_Module -( Positional_Interface
 Pass_Interface - Close_Communication
 Check_In_Point -( Pass_Interface
